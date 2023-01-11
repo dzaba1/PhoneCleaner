@@ -7,7 +7,8 @@ namespace Dzaba.PhoneCleaner.Lib.Config
     [XmlRoot]
     public sealed class Config
     {
-        [XmlElement]
+        [XmlElement(Type = typeof(Copy))]
+        [XmlElement(Type = typeof(Remove))]
         public Action[] Actions { get; set; }
     }
 }
