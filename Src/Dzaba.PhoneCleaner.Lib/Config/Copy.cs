@@ -4,11 +4,8 @@ using System.Xml.Serialization;
 namespace Dzaba.PhoneCleaner.Lib.Config
 {
     [Serializable]
-    public sealed class Copy : Action
+    public sealed class Copy : DirectoryAction
     {
-        [XmlAttribute]
-        public string Source { get; set; }
-
         [XmlAttribute]
         public string Destination { get; set; }
     }

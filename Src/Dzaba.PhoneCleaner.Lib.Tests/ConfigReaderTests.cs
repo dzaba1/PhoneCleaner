@@ -27,7 +27,8 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
         public void Read_WhenXml_ThenConfig()
         {
             var xml = @"<Config>
-  <Copy Source=""Path1"" Destination=""Path2""></Copy>
+  <Copy Path=""Path1"" Destination=""Path2""></Copy>
+  <Copy Path=""Path1"" Destination=""Path2"" Content=""true"" ContentRecursive=""true""></Copy>
   <Remove Path=""Path3""></Remove>
   <Remove Path=""Path4"" Content=""true"" ContentRecursive=""true""></Remove>
 </Config>";
@@ -38,19 +39,27 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
             var sut = CreateSut();
             var result = sut.Read(filepath);
 
-            result.Actions.Should().HaveCount(3);
-            var copy = (Copy)result.Actions[0];
-            var remove1 = (Remove)result.Actions[1];
-            var remove2 = (Remove)result.Actions[2];
+            result.Actions.Should().HaveCount(4);
+            var copy1 = (Copy)result.Actions[0];
+            var copy2 = (Copy)result.Actions[1];
+            var remove1 = (Remove)result.Actions[2];
+            var remove2 = (Remove)result.Actions[3];
 
-            copy.Destination.Should().Be("Path2");
-            copy.Source.Should().Be("Path1");
-            remove1.Path.Should().Be("Path3");
-            remove1.Content.Should().BeFalse();
-            remove1.ContentRecursive.Should().BeFalse();
-            remove2.Path.Should().Be("Path4");
-            remove2.Content.Should().BeTrue();
-            remove2.ContentRecursive.Should().BeTrue();
+            AssertDirectoryAction(copy1, "Path1", false, false);
+            copy1.Destination.Should().Be("Path2");
+
+            AssertDirectoryAction(copy2, "Path1", true, true);
+            copy2.Destination.Should().Be("Path2");
+
+            AssertDirectoryAction(remove1, "Path3", false, false);
+            AssertDirectoryAction(remove2, "Path4", true, true);
+        }
+
+        private void AssertDirectoryAction(DirectoryAction result, string path, bool content, bool contentRecursive)
+        {
+            result.Path.Should().Be(path);
+            result.Content.Should().Be(content);
+            result.ContentRecursive.Should().Be(contentRecursive);
         }
     }
 }

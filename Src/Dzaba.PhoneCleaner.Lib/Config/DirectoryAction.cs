@@ -7,6 +7,9 @@ namespace Dzaba.PhoneCleaner.Lib.Config
     public class DirectoryAction : Action
     {
         [XmlAttribute]
+        public string Path { get; set; }
+
+        [XmlAttribute]
         public bool Content { get; set; }
 
         [XmlAttribute]
