@@ -29,6 +29,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
             var xml = @"<Config>
   <Copy Source=""Path1"" Destination=""Path2""></Copy>
   <Remove Path=""Path3""></Remove>
+  <Remove Path=""Path4"" Content=""true"" Recursive=""false""></Remove>
 </Config>";
 
             var filepath = Path.Combine(TempPath, "config.xml");
@@ -37,13 +38,19 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
             var sut = CreateSut();
             var result = sut.Read(filepath);
 
-            result.Actions.Should().HaveCount(2);
+            result.Actions.Should().HaveCount(3);
             var copy = (Copy)result.Actions[0];
-            var remove = (Remove)result.Actions[1];
+            var remove1 = (Remove)result.Actions[1];
+            var remove2 = (Remove)result.Actions[2];
 
             copy.Destination.Should().Be("Path2");
             copy.Source.Should().Be("Path1");
-            remove.Path.Should().Be("Path3");
+            remove1.Path.Should().Be("Path3");
+            remove1.Content.Should().BeFalse();
+            remove1.Recursive.Should().BeTrue();
+            remove2.Path.Should().Be("Path4");
+            remove2.Content.Should().BeTrue();
+            remove2.Recursive.Should().BeFalse();
         }
     }
 }

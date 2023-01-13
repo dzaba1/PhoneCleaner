@@ -4,6 +4,6 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
 {
     public interface IHandler
     {
-        int Handle(Action model, IDeviceConnection deviceConnection);
+        int Handle(Action model, IDeviceConnection deviceConnection, CleanData cleanData);
     }
 }

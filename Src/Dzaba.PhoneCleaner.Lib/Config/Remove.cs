@@ -8,5 +8,11 @@ namespace Dzaba.PhoneCleaner.Lib.Config
     {
         [XmlAttribute]
         public string Path { get; set; }
+
+        [XmlAttribute]
+        public bool Content { get; set; }
+
+        [XmlAttribute]
+        public bool Recursive { get; set; } = true;
     }
 }
