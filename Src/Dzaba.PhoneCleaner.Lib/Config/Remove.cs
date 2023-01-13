@@ -13,6 +13,6 @@ namespace Dzaba.PhoneCleaner.Lib.Config
         public bool Content { get; set; }
 
         [XmlAttribute]
-        public bool OnlyFiles { get; set; }
+        public bool ContentRecursive { get; set; }
     }
 }

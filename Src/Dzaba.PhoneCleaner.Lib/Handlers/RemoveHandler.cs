@@ -24,8 +24,8 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
             var root = deviceConnection.GetRootOrThrow(cleanData.DriveIndex);
             var path = Path.Combine(root, model.Path);
 
-            logger.LogInformation("Invoking the remove action for path '{Path}'. Content flag: {Content}. Only files: {OnlyFiles}",
-                path, model.Content, model.OnlyFiles);
+            logger.LogInformation("Invoking the remove action for path '{Path}'. Content flag: {Content}. Content recursive: {ContentRecursive}",
+                path, model.Content, model.ContentRecursive);
 
             if (model.Content)
             {
@@ -38,7 +38,7 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
                     affected++;
                 }
 
-                if (!model.OnlyFiles)
+                if (model.ContentRecursive)
                 {
                     var directories = deviceConnection.EnumerateDirectories(path, SearchOption.TopDirectoryOnly);
                     foreach (var dir in directories)

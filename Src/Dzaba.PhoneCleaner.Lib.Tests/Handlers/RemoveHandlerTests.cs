@@ -22,7 +22,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             {
                 Path = Path.Combine(DeviceRootDir, "Dir1"),
                 Content = false,
-                OnlyFiles = false
+                ContentRecursive = false
             };
 
             var device = GetTempPathDevice();
@@ -37,13 +37,13 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
         }
 
         [Test]
-        public void Handle_WhenContentFlagIsSpecified_ThenDirectoryIsEmpty()
+        public void Handle_WhenContentAndRecursiveFlagIsSpecified_ThenDirectoryIsEmpty()
         {
             var model = new Remove()
             {
                 Path = Path.Combine(DeviceRootDir, "Dir1"),
                 Content = true,
-                OnlyFiles = false
+                ContentRecursive = true
             };
 
             var device = GetTempPathDevice();
@@ -60,13 +60,13 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
         }
 
         [Test]
-        public void Handle_WhenContentFlagAndOnlyFilesIsSpecified_ThenDirectoryDoesntHaveFiles()
+        public void Handle_WhenContentFlagIsSpecified_ThenDirectoryDoesntHaveFiles()
         {
             var model = new Remove()
             {
                 Path = Path.Combine(DeviceRootDir, "Dir1"),
                 Content = true,
-                OnlyFiles = true
+                ContentRecursive = false
             };
 
             var device = GetTempPathDevice();
