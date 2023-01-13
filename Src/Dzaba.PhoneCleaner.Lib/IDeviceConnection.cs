@@ -11,5 +11,6 @@ namespace Dzaba.PhoneCleaner.Lib
         void CopyFile(string source, Stream dest);
         IEnumerable<string> EnumerateFiles(string path, SearchOption searchOption);
         IEnumerable<string> EnumerateDirectories(string path, SearchOption searchOption);
+        IEnumerable<string> EnumerableDrives();
     }
 }

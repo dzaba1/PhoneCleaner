@@ -64,6 +64,13 @@ namespace Dzaba.PhoneCleaner.Lib
             mediaDevice?.Dispose();
         }
 
+        public IEnumerable<string> EnumerableDrives()
+        {
+            logger.LogInformation("Getting all drives '{DeviceName}'", FriendlyName);
+
+            return mediaDevice.GetDrives().Select(d => d.RootDirectory.FullName);
+        }
+
         public IEnumerable<string> EnumerateDirectories(string path, SearchOption searchOption)
         {
             Require.NotWhiteSpace(path, nameof(path));
