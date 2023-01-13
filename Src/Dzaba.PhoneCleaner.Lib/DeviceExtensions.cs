@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 
 namespace Dzaba.PhoneCleaner.Lib
@@ -16,6 +17,20 @@ namespace Dzaba.PhoneCleaner.Lib
             }
 
             return root;
+        }
+
+        public static void CopyFile(this IDeviceConnection deviceConnection, string source, string dest, bool overwrite)
+        {
+            Require.NotNull(deviceConnection, nameof(deviceConnection));
+            Require.NotWhiteSpace(source, nameof(source));
+            Require.NotWhiteSpace(dest, nameof(dest));
+
+            var mode = overwrite ? FileMode.Create : FileMode.CreateNew;
+
+            using (var fs = new FileStream(dest, mode, FileAccess.Write, FileShare.None))
+            {
+                deviceConnection.CopyFile(source, fs);
+            }
         }
     }
 }
