@@ -28,7 +28,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
         {
             var xml = @"<Config>
   <Copy Path=""Path1"" Destination=""Path2""></Copy>
-  <Copy Path=""Path1"" Destination=""Path2"" Content=""true"" ContentRecursive=""true""></Copy>
+  <Copy Path=""Path1"" Destination=""Path2"" Recursive=""true"" Override=""true""></Copy>
   <Remove Path=""Path3""></Remove>
   <Remove Path=""Path4"" Content=""true"" ContentRecursive=""true""></Remove>
 </Config>";
@@ -45,21 +45,26 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
             var remove1 = (Remove)result.Actions[2];
             var remove2 = (Remove)result.Actions[3];
 
-            AssertDirectoryAction(copy1, "Path1", false, false);
-            copy1.Destination.Should().Be("Path2");
+            AssertCopyAction(copy1, "Path1", "Path2", false, false);
+            AssertCopyAction(copy2, "Path1", "Path2", true, true);
 
-            AssertDirectoryAction(copy2, "Path1", true, true);
-            copy2.Destination.Should().Be("Path2");
-
-            AssertDirectoryAction(remove1, "Path3", false, false);
-            AssertDirectoryAction(remove2, "Path4", true, true);
+            AssertRemoveAction(remove1, "Path3", false, false);
+            AssertRemoveAction(remove2, "Path4", true, true);
         }
 
-        private void AssertDirectoryAction(DirectoryAction result, string path, bool content, bool contentRecursive)
+        private void AssertRemoveAction(Remove result, string path, bool content, bool contentRecursive)
         {
             result.Path.Should().Be(path);
             result.Content.Should().Be(content);
             result.ContentRecursive.Should().Be(contentRecursive);
+        }
+
+        private void AssertCopyAction(Copy result, string path, string dest, bool recursive, bool @override)
+        {
+            result.Path.Should().Be(path);
+            result.Destination.Should().Be(dest);
+            result.Recursive.Should().Be(recursive);
+            result.Override.Should().Be(@override);
         }
     }
 }
