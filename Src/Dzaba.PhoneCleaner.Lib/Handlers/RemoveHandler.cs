@@ -1,7 +1,6 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Config;
 using Microsoft.Extensions.Logging;
 using System.IO;
-using System.Reflection;
 
 namespace Dzaba.PhoneCleaner.Lib.Handlers
 {
@@ -25,8 +24,8 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
             var root = deviceConnection.GetRootOrThrow(cleanData.DriveIndex);
             var path = Path.Combine(root, model.Path);
 
-            logger.LogInformation("Invoking the remove action for path '{Path}'. Content flag: {Content}. Recursive: {Recursive}",
-                path, model.Content, model.Recursive);
+            logger.LogInformation("Invoking the remove action for path '{Path}'. Content flag: {Content}. Only files: {OnlyFiles}",
+                path, model.Content, model.OnlyFiles);
 
             if (model.Content)
             {
@@ -39,18 +38,21 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
                     affected++;
                 }
 
-                var directories = deviceConnection.EnumerateDirectories(path, SearchOption.TopDirectoryOnly);
-                foreach (var dir in directories)
+                if (!model.OnlyFiles)
                 {
-                    deviceConnection.DeleteDirectory(dir, model.Recursive);
-                    affected++;
+                    var directories = deviceConnection.EnumerateDirectories(path, SearchOption.TopDirectoryOnly);
+                    foreach (var dir in directories)
+                    {
+                        deviceConnection.DeleteDirectory(dir, true);
+                        affected++;
+                    }
                 }
 
                 return affected;
             }
             else
             {
-                deviceConnection.DeleteDirectory(path, model.Recursive);
+                deviceConnection.DeleteDirectory(path, true);
                 return 1;
             }
         }

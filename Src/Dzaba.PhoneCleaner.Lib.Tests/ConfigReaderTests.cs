@@ -29,7 +29,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
             var xml = @"<Config>
   <Copy Source=""Path1"" Destination=""Path2""></Copy>
   <Remove Path=""Path3""></Remove>
-  <Remove Path=""Path4"" Content=""true"" Recursive=""false""></Remove>
+  <Remove Path=""Path4"" Content=""true"" OnlyFiles=""true""></Remove>
 </Config>";
 
             var filepath = Path.Combine(TempPath, "config.xml");
@@ -47,10 +47,10 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
             copy.Source.Should().Be("Path1");
             remove1.Path.Should().Be("Path3");
             remove1.Content.Should().BeFalse();
-            remove1.Recursive.Should().BeTrue();
+            remove1.OnlyFiles.Should().BeFalse();
             remove2.Path.Should().Be("Path4");
             remove2.Content.Should().BeTrue();
-            remove2.Recursive.Should().BeFalse();
+            remove2.OnlyFiles.Should().BeTrue();
         }
     }
 }

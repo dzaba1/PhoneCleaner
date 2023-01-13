@@ -22,7 +22,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             {
                 Path = Path.Combine(DeviceRootDir, "Dir1"),
                 Content = false,
-                Recursive = true
+                OnlyFiles = false
             };
 
             var device = GetTempPathDevice();
@@ -43,7 +43,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             {
                 Path = Path.Combine(DeviceRootDir, "Dir1"),
                 Content = true,
-                Recursive = true
+                OnlyFiles = false
             };
 
             var device = GetTempPathDevice();
@@ -57,6 +57,29 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             Directory.Exists(model.Path).Should().BeTrue();
             Directory.EnumerateFiles(model.Path).Should().BeEmpty();
             Directory.EnumerateDirectories(model.Path).Should().BeEmpty();
+        }
+
+        [Test]
+        public void Handle_WhenContentFlagAndOnlyFilesIsSpecified_ThenDirectoryDoesntHaveFiles()
+        {
+            var model = new Remove()
+            {
+                Path = Path.Combine(DeviceRootDir, "Dir1"),
+                Content = true,
+                OnlyFiles = true
+            };
+
+            var device = GetTempPathDevice();
+            SetupSomeDeviceFiles();
+
+            var sut = CreateSut();
+
+            var result = sut.Handle(model, device, GetCleanData());
+
+            result.Should().Be(2);
+            Directory.Exists(model.Path).Should().BeTrue();
+            Directory.EnumerateFiles(model.Path).Should().BeEmpty();
+            Directory.EnumerateDirectories(model.Path).Should().HaveCount(2);
         }
     }
 }
