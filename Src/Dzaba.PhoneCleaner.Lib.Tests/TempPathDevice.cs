@@ -32,6 +32,11 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
             File.Delete(path);
         }
 
+        public bool DirectoryExists(string path)
+        {
+            return Directory.Exists(path);
+        }
+
         public void Dispose()
         {
             
@@ -50,6 +55,11 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
         public IEnumerable<string> EnumerateFiles(string path, SearchOption searchOption)
         {
             return Directory.EnumerateFiles(path, "*.*", searchOption);
+        }
+
+        public bool FileExists(string path)
+        {
+            return File.Exists(path);
         }
     }
 }

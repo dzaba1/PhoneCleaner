@@ -12,5 +12,7 @@ namespace Dzaba.PhoneCleaner.Lib
         IEnumerable<string> EnumerateFiles(string path, SearchOption searchOption);
         IEnumerable<string> EnumerateDirectories(string path, SearchOption searchOption);
         IEnumerable<string> EnumerableDrives();
+        bool DirectoryExists(string path);
+        bool FileExists(string path);
     }
 }

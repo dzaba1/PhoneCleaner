@@ -37,6 +37,25 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
         }
 
         [Test]
+        public void Handle_WhenDirectoryDoesntExists_ThenNothing()
+        {
+            var model = new Remove()
+            {
+                Path = Path.Combine(DeviceRootDir, "Dir1"),
+                Content = false,
+                ContentRecursive = false
+            };
+
+            var device = GetTempPathDevice();
+
+            var sut = CreateSut();
+
+            var result = sut.Handle(model, device, GetCleanData());
+
+            result.Should().Be(0);
+        }
+
+        [Test]
         public void Handle_WhenContentAndRecursiveFlagIsSpecified_ThenDirectoryIsEmpty()
         {
             var model = new Remove()

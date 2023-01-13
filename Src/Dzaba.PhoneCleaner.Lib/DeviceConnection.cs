@@ -58,6 +58,13 @@ namespace Dzaba.PhoneCleaner.Lib
             mediaDevice.DeleteFile(path);
         }
 
+        public bool DirectoryExists(string path)
+        {
+            Require.NotWhiteSpace(path, nameof(path));
+
+            return mediaDevice.DirectoryExists(path);
+        }
+
         public void Dispose()
         {
             logger.LogInformation("Disposing '{DeviceName}'", FriendlyName);
@@ -85,6 +92,13 @@ namespace Dzaba.PhoneCleaner.Lib
 
             logger.LogInformation("Getting all files from '{DeviceName}' '{Path}'. Search options: {SearchOption}.", FriendlyName, path, searchOption);
             return mediaDevice.EnumerateFiles(path, "*.*", searchOption);
+        }
+
+        public bool FileExists(string path)
+        {
+            Require.NotWhiteSpace(path, nameof(path));
+
+            return mediaDevice.FileExists(path);
         }
     }
 }

@@ -27,6 +27,12 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
             logger.LogInformation("Invoking the remove action for path '{Path}'. Content flag: {Content}. Content recursive: {ContentRecursive}",
                 path, model.Content, model.ContentRecursive);
 
+            if (!deviceConnection.DirectoryExists(path))
+            {
+                logger.LogInformation("The directory '{Path}' doesn't exist.", path);
+                return 0;
+            }
+
             if (model.Content)
             {
                 var affected = 0;
