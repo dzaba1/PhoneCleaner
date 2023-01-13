@@ -1,9 +1,10 @@
-﻿using Dzaba.PhoneCleaner.Lib.Config;
+﻿using System;
 
 namespace Dzaba.PhoneCleaner.Lib.Handlers
 {
     public interface IHandler
     {
-        int Handle(Action model, IDeviceConnection deviceConnection, CleanData cleanData);
+        Type ModelType { get; }
+        int Handle(Config.Action model, IDeviceConnection deviceConnection, CleanData cleanData);
     }
 }
