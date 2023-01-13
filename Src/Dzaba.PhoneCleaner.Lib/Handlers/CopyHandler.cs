@@ -35,11 +35,10 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
                 return 0;
             }
 
-            CopyDirectory(deviceConnection, path, fullDest, model.Recursive, model.Override);
-            return 1;
+            return CopyDirectory(deviceConnection, path, fullDest, model.Recursive, model.Override);
         }
 
-        private void CopyDirectory(IDeviceConnection deviceConnection,
+        private int CopyDirectory(IDeviceConnection deviceConnection,
             string sourceDir, string destinationDir,
             bool recursive, bool overwrite)
         {
@@ -47,6 +46,8 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
             {
                 Directory.CreateDirectory(destinationDir);
             }
+
+            var affected = 0;
 
             foreach (var file in deviceConnection.EnumerateFiles(sourceDir, SearchOption.TopDirectoryOnly))
             {
@@ -57,6 +58,7 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
                 {
                     logger.LogInformation("Copy file '{Path}' to '{Destination}'.", file, targetFilePath);
                     deviceConnection.CopyFile(file, targetFilePath, overwrite);
+                    affected++;
                 }
             }
 
@@ -66,9 +68,12 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
                 {
                     var subDirName = DeviceIOUtils.GetFileOrDirectoryName(subDir);
                     string newDestinationDir = Path.Combine(destinationDir, subDirName);
-                    CopyDirectory(deviceConnection, subDir, newDestinationDir, true, overwrite);
+                    var subDirAffected = CopyDirectory(deviceConnection, subDir, newDestinationDir, true, overwrite);
+                    affected += subDirAffected;
                 }
             }
+
+            return affected;
         }
     }
 }

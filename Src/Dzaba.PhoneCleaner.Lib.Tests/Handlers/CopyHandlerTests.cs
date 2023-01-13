@@ -34,7 +34,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
 
             var result = sut.Handle(model, device, GetCleanData());
 
-            result.Should().Be(1);
+            result.Should().Be(2);
             Directory.Exists(model.Destination).Should().BeTrue();
             Directory.EnumerateFiles(model.Destination).Should().HaveCount(2);
             Directory.EnumerateDirectories(model.Destination).Should().BeEmpty();
@@ -114,7 +114,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
 
             var result = sut.Handle(model, device, GetCleanData());
 
-            result.Should().Be(1);
+            result.Should().Be(2);
             Directory.EnumerateFiles(model.Destination).Should().HaveCount(2);
             File.ReadAllText(fileToCheck).Should().Be(expected);
         }
@@ -137,7 +137,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
 
             var result = sut.Handle(model, device, GetCleanData());
 
-            result.Should().Be(1);
+            result.Should().Be(14);
             Directory.Exists(model.Destination).Should().BeTrue();
             Directory.EnumerateFiles(model.Destination).Should().HaveCount(2);
             Directory.EnumerateDirectories(model.Destination).Should().HaveCount(2);
