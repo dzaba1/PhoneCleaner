@@ -1,7 +1,9 @@
 ﻿using AutoFixture;
 using Dzaba.PhoneCleaner.Lib.Config;
 using Dzaba.PhoneCleaner.Lib.Handlers;
+using Dzaba.PhoneCleaner.Lib.Handlers.Options;
 using FluentAssertions;
+using Moq;
 using NUnit.Framework;
 using System.IO;
 using System.Linq;
@@ -29,6 +31,10 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
 
             var device = GetTempPathDevice();
             SetupSomeDeviceFiles();
+
+            Fixture.FreezeMock<IOptionsEvaluator>()
+                .Setup(x => x.IsOk(null, device, It.IsAny<string>(), It.IsAny<bool>()))
+                .Returns(true);
 
             var sut = CreateSut();
 
@@ -77,6 +83,10 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             var device = GetTempPathDevice();
             SetupSomeDeviceFiles();
 
+            Fixture.FreezeMock<IOptionsEvaluator>()
+                .Setup(x => x.IsOk(null, device, It.IsAny<string>(), It.IsAny<bool>()))
+                .Returns(true);
+
             var fileToCheck = Path.Combine(model.Destination, "file1.txt");
             Directory.CreateDirectory(model.Destination);
             File.WriteAllText(fileToCheck, expected);
@@ -106,6 +116,10 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             var device = GetTempPathDevice();
             SetupSomeDeviceFiles();
 
+            Fixture.FreezeMock<IOptionsEvaluator>()
+                .Setup(x => x.IsOk(null, device, It.IsAny<string>(), It.IsAny<bool>()))
+                .Returns(true);
+
             var fileToCheck = Path.Combine(model.Destination, "file1.txt");
             Directory.CreateDirectory(model.Destination);
             File.WriteAllText(fileToCheck, "Not touched");
@@ -133,6 +147,10 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             var device = GetTempPathDevice();
             SetupSomeDeviceFiles();
 
+            Fixture.FreezeMock<IOptionsEvaluator>()
+                .Setup(x => x.IsOk(null, device, It.IsAny<string>(), It.IsAny<bool>()))
+                .Returns(true);
+
             var fileToCheck = Path.Combine(model.Destination, "file1.txt");
             Directory.CreateDirectory(model.Destination);
             File.WriteAllText(fileToCheck, "Not touched");
@@ -157,6 +175,10 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             var device = GetTempPathDevice();
             SetupSomeDeviceFiles();
 
+            Fixture.FreezeMock<IOptionsEvaluator>()
+                .Setup(x => x.IsOk(null, device, It.IsAny<string>(), It.IsAny<bool>()))
+                .Returns(true);
+
             var sut = CreateSut();
 
             var result = sut.Handle(model, device, GetCleanData());
@@ -169,6 +191,34 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             var nextDir = Directory.EnumerateDirectories(model.Destination).First();
             Directory.EnumerateFiles(nextDir).Should().HaveCount(2);
             Directory.EnumerateDirectories(nextDir).Should().HaveCount(2);
+        }
+
+        [Test]
+        public void Handle_WhenNotOk_ThenNothing()
+        {
+            var model = new Copy()
+            {
+                Path = Path.Combine(DeviceRootDir, "Dir1"),
+                Destination = Path.Combine(WorkingDir, "Dir1"),
+                OnConflict = OnFileConflict.RaiseError,
+                Recursive = false
+            };
+
+            var device = GetTempPathDevice();
+            SetupSomeDeviceFiles();
+
+            Fixture.FreezeMock<IOptionsEvaluator>()
+                .Setup(x => x.IsOk(null, device, It.IsAny<string>(), It.IsAny<bool>()))
+                .Returns(false);
+
+            var sut = CreateSut();
+
+            var result = sut.Handle(model, device, GetCleanData());
+
+            result.Should().Be(0);
+            Directory.Exists(model.Destination).Should().BeTrue();
+            Directory.EnumerateFiles(model.Destination).Should().BeEmpty();
+            Directory.EnumerateDirectories(model.Destination).Should().BeEmpty();
         }
     }
 }

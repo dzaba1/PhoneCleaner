@@ -44,6 +44,7 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers.Options
 
                 if (!handler.IsOk(option, deviceConnection, path, isDirectory))
                 {
+                    logger.LogInformation("The path '{Path}' is not OK by '{Option}' option.", path, option.GetType());
                     return false;
                 }
             }

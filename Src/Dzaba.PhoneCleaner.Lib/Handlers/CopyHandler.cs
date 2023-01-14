@@ -1,20 +1,26 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Config;
 using Dzaba.PhoneCleaner.Lib.Device;
+using Dzaba.PhoneCleaner.Lib.Handlers.Options;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace Dzaba.PhoneCleaner.Lib.Handlers
 {
     internal sealed class CopyHandler : HandlerBase<Copy>
     {
         private readonly ILogger<CopyHandler> logger;
+        private readonly IOptionsEvaluator optionsEvaluator;
 
-        public CopyHandler(ILogger<CopyHandler> logger)
+        public CopyHandler(ILogger<CopyHandler> logger,
+            IOptionsEvaluator optionsEvaluator)
         {
             Require.NotNull(logger, nameof(logger));
+            Require.NotNull(optionsEvaluator, nameof(optionsEvaluator));
 
             this.logger = logger;
+            this.optionsEvaluator = optionsEvaluator;
         }
 
         protected override int Handle(Copy model, IDeviceConnection deviceConnection, CleanData cleanData)
@@ -39,12 +45,12 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
 
             var pathInfo = deviceConnection.GetDirectoryInfo(path);
 
-            return CopyDirectory(deviceConnection, pathInfo, fullDest, model.Recursive, model.OnConflict);
+            return CopyDirectory(deviceConnection, pathInfo, fullDest, model);
         }
 
         private int CopyDirectory(IDeviceConnection deviceConnection,
             IDeviceDirectoryInfo sourceDir, string destinationDir,
-            bool recursive, OnFileConflict onFileConflict)
+            Copy model)
         {
             if (!Directory.Exists(destinationDir))
             {
@@ -53,22 +59,28 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
 
             var affected = 0;
 
-            foreach (var file in deviceConnection.EnumerateFiles(sourceDir.FullName, SearchOption.TopDirectoryOnly))
+            var files = deviceConnection.EnumerateFiles(sourceDir.FullName, SearchOption.TopDirectoryOnly)
+                .Where(f => optionsEvaluator.IsOk(model.Options, deviceConnection, f.FullName, false));
+
+            foreach (var file in files)
             {
                 string targetFilePath = Path.Combine(destinationDir, file.Name);
 
-                if (TryHandleFile(file, targetFilePath, deviceConnection, onFileConflict))
+                if (TryHandleFile(file, targetFilePath, deviceConnection, model.OnConflict))
                 {
                     affected++;
                 }
             }
 
-            if (recursive)
+            if (model.Recursive)
             {
-                foreach (var subDir in deviceConnection.EnumerateDirectories(sourceDir.FullName, SearchOption.TopDirectoryOnly))
+                var subDirs = deviceConnection.EnumerateDirectories(sourceDir.FullName, SearchOption.TopDirectoryOnly)
+                    .Where(d => optionsEvaluator.IsOk(model.Options, deviceConnection, d.FullName, true));
+
+                foreach (var subDir in subDirs)
                 {
                     string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
-                    var subDirAffected = CopyDirectory(deviceConnection, subDir, newDestinationDir, true, onFileConflict);
+                    var subDirAffected = CopyDirectory(deviceConnection, subDir, newDestinationDir, model);
                     affected += subDirAffected;
                 }
             }
