@@ -32,7 +32,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
         {
             var sut = CreateSut();
 
-            var result = sut.IsOk(null, Mock.Of<IDeviceConnection>(), null, false);
+            var result = sut.IsOk(null, Mock.Of<IDeviceConnection>(), Mock.Of<IDeviceSystemInfo>());
             result.Should().BeTrue();
         }
 
@@ -52,16 +52,25 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             };
         }
 
+        private IDeviceSystemInfo GetSystemInfo(bool directory)
+        {
+            if (directory)
+            {
+                return Mock.Of<IDeviceDirectoryInfo>();
+            }
+
+            return Mock.Of<IDeviceFileInfo>();
+        }
+
         [Test]
         public void IsOk_WhenFile_ThenHandlersForFile()
         {
             var options = GetSomeOptions().ToArray();
             var device = Mock.Of<IDeviceConnection>();
-            var path = "Path";
-            var isDirectory = false;
+            var fileInfo = GetSystemInfo(false);
 
             var handler = new Mock<IOptionHandler>();
-            handler.Setup(x => x.IsOk(It.IsIn<Option>(options), device, path, isDirectory))
+            handler.Setup(x => x.IsOk(It.IsIn<Option>(options), device, fileInfo))
                 .Returns(true);
 
             fixture.FreezeMock<IHandlerFactory>()
@@ -70,12 +79,12 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
 
             var sut = CreateSut();
 
-            var result = sut.IsOk(options, device, path, isDirectory);
+            var result = sut.IsOk(options, device, fileInfo);
 
             result.Should().BeTrue();
-            handler.Verify(x => x.IsOk(options[0], device, path, isDirectory), Times.Once());
-            handler.Verify(x => x.IsOk(options[1], device, path, isDirectory), Times.Never());
-            handler.Verify(x => x.IsOk(options[2], device, path, isDirectory), Times.Once());
+            handler.Verify(x => x.IsOk(options[0], device, fileInfo), Times.Once());
+            handler.Verify(x => x.IsOk(options[1], device, fileInfo), Times.Never());
+            handler.Verify(x => x.IsOk(options[2], device, fileInfo), Times.Once());
         }
 
         [Test]
@@ -83,11 +92,10 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
         {
             var options = GetSomeOptions().ToArray();
             var device = Mock.Of<IDeviceConnection>();
-            var path = "Path";
-            var isDirectory = true;
+            var dirInfo = GetSystemInfo(true);
 
             var handler = new Mock<IOptionHandler>();
-            handler.Setup(x => x.IsOk(It.IsIn<Option>(options), device, path, isDirectory))
+            handler.Setup(x => x.IsOk(It.IsIn<Option>(options), device, dirInfo))
                 .Returns(true);
 
             fixture.FreezeMock<IHandlerFactory>()
@@ -96,12 +104,12 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
 
             var sut = CreateSut();
 
-            var result = sut.IsOk(options, device, path, isDirectory);
+            var result = sut.IsOk(options, device, dirInfo);
 
             result.Should().BeTrue();
-            handler.Verify(x => x.IsOk(options[0], device, path, isDirectory), Times.Never());
-            handler.Verify(x => x.IsOk(options[1], device, path, isDirectory), Times.Once());
-            handler.Verify(x => x.IsOk(options[2], device, path, isDirectory), Times.Once());
+            handler.Verify(x => x.IsOk(options[0], device, dirInfo), Times.Never());
+            handler.Verify(x => x.IsOk(options[1], device, dirInfo), Times.Once());
+            handler.Verify(x => x.IsOk(options[2], device, dirInfo), Times.Once());
         }
 
         [Test]
@@ -109,15 +117,14 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
         {
             var options = GetSomeOptions().ToArray();
             var device = Mock.Of<IDeviceConnection>();
-            var path = "Path";
-            var isDirectory = false;
+            var fileInfo = GetSystemInfo(false);
 
             var handler = new Mock<IOptionHandler>();
-            handler.Setup(x => x.IsOk(options[0], device, path, isDirectory))
+            handler.Setup(x => x.IsOk(options[0], device, fileInfo))
                 .Returns(false);
-            handler.Setup(x => x.IsOk(options[1], device, path, isDirectory))
+            handler.Setup(x => x.IsOk(options[1], device, fileInfo))
                 .Returns(true);
-            handler.Setup(x => x.IsOk(options[2], device, path, isDirectory))
+            handler.Setup(x => x.IsOk(options[2], device, fileInfo))
                 .Returns(true);
 
             fixture.FreezeMock<IHandlerFactory>()
@@ -126,12 +133,12 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
 
             var sut = CreateSut();
 
-            var result = sut.IsOk(options, device, path, isDirectory);
+            var result = sut.IsOk(options, device, fileInfo);
 
             result.Should().BeFalse();
-            handler.Verify(x => x.IsOk(options[0], device, path, isDirectory), Times.Once());
-            handler.Verify(x => x.IsOk(options[1], device, path, isDirectory), Times.Never());
-            handler.Verify(x => x.IsOk(options[2], device, path, isDirectory), Times.Never());
+            handler.Verify(x => x.IsOk(options[0], device, fileInfo), Times.Once());
+            handler.Verify(x => x.IsOk(options[1], device, fileInfo), Times.Never());
+            handler.Verify(x => x.IsOk(options[2], device, fileInfo), Times.Never());
         }
     }
 }

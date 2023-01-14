@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Dzaba.PhoneCleaner.Lib.Tests.Device
 {
-    internal class FileSystemInfoWrap<T> : IDeviceSystemInfoWrap
+    internal class FileSystemInfoWrap<T> : IDeviceSystemInfo
         where T : FileSystemInfo
     {
         public FileSystemInfoWrap(T info)

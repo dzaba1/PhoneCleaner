@@ -5,7 +5,7 @@ using MediaDevices;
 
 namespace Dzaba.PhoneCleaner.MtpMediaDevices
 {
-    internal class FileSystemInfoWrap<T> : IDeviceSystemInfoWrap
+    internal class FileSystemInfoWrap<T> : IDeviceSystemInfo
         where T : MediaFileSystemInfo
     {
         public FileSystemInfoWrap(T info)

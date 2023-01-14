@@ -8,7 +8,7 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers.Options
 {
     public interface IOptionsEvaluator
     {
-        bool IsOk(IEnumerable<Option> model, IDeviceConnection deviceConnection, string path, bool isDirectory);
+        bool IsOk(IEnumerable<Option> model, IDeviceConnection deviceConnection, IDeviceSystemInfo systemInfo);
     }
 
     internal sealed class OptionsEvaluator : IOptionsEvaluator
@@ -26,7 +26,7 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers.Options
             this.logger = logger;
         }
 
-        public bool IsOk(IEnumerable<Option> model, IDeviceConnection deviceConnection, string path, bool isDirectory)
+        public bool IsOk(IEnumerable<Option> model, IDeviceConnection deviceConnection, IDeviceSystemInfo systemInfo)
         {
             if (model == null)
             {
@@ -34,17 +34,17 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers.Options
             }
 
             var validOptions = model
-                .Where(o => IsOptionValid(o, isDirectory));
+                .Where(o => IsOptionValid(o, systemInfo));
 
             foreach (var option in validOptions)
             {
                 var handler = handlerFactory.CreateOptionHandler(option);
 
-                logger.LogDebug("Invoking '{OptionHander}' option handler for '{Path}'. Is directory: {IsDirectory}", handler.GetType(), path, isDirectory);
+                logger.LogDebug("Invoking '{OptionHander}' option handler for '{Path}'. System info type: {SystemInfoType}", handler.GetType(), systemInfo.FullName, systemInfo.GetType());
 
-                if (!handler.IsOk(option, deviceConnection, path, isDirectory))
+                if (!handler.IsOk(option, deviceConnection, systemInfo))
                 {
-                    logger.LogInformation("The path '{Path}' is not OK by '{Option}' option.", path, option.GetType());
+                    logger.LogInformation("The path '{Path}' is not OK by '{Option}' option.", systemInfo.FullName, option.GetType());
                     return false;
                 }
             }
@@ -52,9 +52,9 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers.Options
             return true;
         }
 
-        private bool IsOptionValid(Option option, bool isDirectory)
+        private bool IsOptionValid(Option option, IDeviceSystemInfo systemInfo)
         {
-            if (isDirectory)
+            if (systemInfo is IDeviceDirectoryInfo)
             {
                 return option.ItemType.HasFlag(IOItemType.Directory);
             }

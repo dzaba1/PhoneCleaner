@@ -7,6 +7,6 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers.Options
     public interface IOptionHandler
     {
         Type ModelType { get; }
-        bool IsOk(Option model, IDeviceConnection deviceConnection, string path, bool isDirectory);
+        bool IsOk(Option model, IDeviceConnection deviceConnection, IDeviceSystemInfo systemInfo);
     }
 }

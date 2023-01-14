@@ -1,8 +1,10 @@
 ﻿using AutoFixture;
 using Dzaba.PhoneCleaner.Lib.Config;
+using Dzaba.PhoneCleaner.Lib.Device;
 using Dzaba.PhoneCleaner.Lib.Handlers;
 using Dzaba.PhoneCleaner.Lib.Handlers.Options;
 using FluentAssertions;
+using Moq;
 using NUnit.Framework;
 using System.IO;
 
@@ -28,7 +30,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             SetupSomeDeviceFiles();
 
             Fixture.FreezeMock<IOptionsEvaluator>()
-                .Setup(x => x.IsOk(null, device, model.Path, true))
+                .Setup(x => x.IsOk(null, device, It.Is<IDeviceSystemInfo>(d => d is IDeviceDirectoryInfo && d.FullName == model.Path)))
                 .Returns(true);
 
             var sut = CreateSut();
@@ -51,7 +53,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             SetupSomeDeviceFiles();
 
             Fixture.FreezeMock<IOptionsEvaluator>()
-                .Setup(x => x.IsOk(null, device, model.Path, true))
+                .Setup(x => x.IsOk(null, device, It.Is<IDeviceSystemInfo>(d => d is IDeviceDirectoryInfo && d.FullName == model.Path)))
                 .Returns(false);
 
             var sut = CreateSut();
@@ -73,7 +75,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             var device = GetTempPathDevice();
 
             Fixture.FreezeMock<IOptionsEvaluator>()
-                .Setup(x => x.IsOk(null, device, model.Path, true))
+                .Setup(x => x.IsOk(null, device, It.Is<IDeviceSystemInfo>(d => d is IDeviceDirectoryInfo && d.FullName == model.Path)))
                 .Returns(true);
 
             var sut = CreateSut();

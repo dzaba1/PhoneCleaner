@@ -9,11 +9,11 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers.Options
     {
         public Type ModelType => typeof(T);
 
-        public bool IsOk(Option model, IDeviceConnection deviceConnection, string path, bool isDirectory)
+        public bool IsOk(Option model, IDeviceConnection deviceConnection, IDeviceSystemInfo systemInfo)
         {
-            return IsOk((T)model, deviceConnection, path, isDirectory);
+            return IsOk((T)model, deviceConnection, systemInfo);
         }
 
-        protected abstract bool IsOk(T model, IDeviceConnection deviceConnection, string path, bool isDirectory);
+        protected abstract bool IsOk(T model, IDeviceConnection deviceConnection, IDeviceSystemInfo systemInfo);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Dzaba.PhoneCleaner.Lib.Device
 {
-    public interface IDeviceSystemInfoWrap
+    public interface IDeviceSystemInfo
     {
         string Name { get; }
         string FullName { get; }

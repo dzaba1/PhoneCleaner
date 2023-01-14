@@ -38,7 +38,9 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
                 return 0;
             }
 
-            if (!optionsEvaluator.IsOk(model.Options, deviceConnection, path, true))
+            var pathInfo = deviceConnection.GetDirectoryInfo(path);
+
+            if (!optionsEvaluator.IsOk(model.Options, deviceConnection, pathInfo))
             {
                 logger.LogInformation("The directory '{Path}' doesn't match options.", path);
                 return 0;

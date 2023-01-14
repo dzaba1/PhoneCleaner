@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using Dzaba.PhoneCleaner.Lib.Config;
+using Dzaba.PhoneCleaner.Lib.Device;
 using Dzaba.PhoneCleaner.Lib.Handlers;
 using Dzaba.PhoneCleaner.Lib.Handlers.Options;
 using FluentAssertions;
@@ -33,7 +34,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             SetupSomeDeviceFiles();
 
             Fixture.FreezeMock<IOptionsEvaluator>()
-                .Setup(x => x.IsOk(null, device, It.IsAny<string>(), It.IsAny<bool>()))
+                .Setup(x => x.IsOk(null, device, It.IsAny<IDeviceSystemInfo>()))
                 .Returns(true);
 
             var sut = CreateSut();
@@ -84,7 +85,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             SetupSomeDeviceFiles();
 
             Fixture.FreezeMock<IOptionsEvaluator>()
-                .Setup(x => x.IsOk(null, device, It.IsAny<string>(), It.IsAny<bool>()))
+                .Setup(x => x.IsOk(null, device, It.IsAny<IDeviceSystemInfo>()))
                 .Returns(true);
 
             var fileToCheck = Path.Combine(model.Destination, "file1.txt");
@@ -117,7 +118,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             SetupSomeDeviceFiles();
 
             Fixture.FreezeMock<IOptionsEvaluator>()
-                .Setup(x => x.IsOk(null, device, It.IsAny<string>(), It.IsAny<bool>()))
+                .Setup(x => x.IsOk(null, device, It.IsAny<IDeviceSystemInfo>()))
                 .Returns(true);
 
             var fileToCheck = Path.Combine(model.Destination, "file1.txt");
@@ -148,7 +149,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             SetupSomeDeviceFiles();
 
             Fixture.FreezeMock<IOptionsEvaluator>()
-                .Setup(x => x.IsOk(null, device, It.IsAny<string>(), It.IsAny<bool>()))
+                .Setup(x => x.IsOk(null, device, It.IsAny<IDeviceSystemInfo>()))
                 .Returns(true);
 
             var fileToCheck = Path.Combine(model.Destination, "file1.txt");
@@ -176,7 +177,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             SetupSomeDeviceFiles();
 
             Fixture.FreezeMock<IOptionsEvaluator>()
-                .Setup(x => x.IsOk(null, device, It.IsAny<string>(), It.IsAny<bool>()))
+                .Setup(x => x.IsOk(null, device, It.IsAny<IDeviceSystemInfo>()))
                 .Returns(true);
 
             var sut = CreateSut();
@@ -208,7 +209,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             SetupSomeDeviceFiles();
 
             Fixture.FreezeMock<IOptionsEvaluator>()
-                .Setup(x => x.IsOk(null, device, It.IsAny<string>(), It.IsAny<bool>()))
+                .Setup(x => x.IsOk(null, device, It.IsAny<IDeviceSystemInfo>()))
                 .Returns(false);
 
             var sut = CreateSut();

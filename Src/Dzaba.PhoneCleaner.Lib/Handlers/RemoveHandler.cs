@@ -43,7 +43,7 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
             var affected = 0;
 
             var files = deviceConnection.EnumerateFiles(path, SearchOption.TopDirectoryOnly)
-                .Where(f => optionsEvaluator.IsOk(model.Options, deviceConnection, f.FullName, false));
+                .Where(f => optionsEvaluator.IsOk(model.Options, deviceConnection, f));
 
             foreach (var file in files)
             {
@@ -54,7 +54,7 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
             if (model.Recursive)
             {
                 var directories = deviceConnection.EnumerateDirectories(path, SearchOption.TopDirectoryOnly)
-                    .Where(d => optionsEvaluator.IsOk(model.Options, deviceConnection, d.FullName, true));
+                    .Where(d => optionsEvaluator.IsOk(model.Options, deviceConnection, d));
 
                 foreach (var dir in directories)
                 {
