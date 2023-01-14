@@ -1,4 +1,5 @@
-﻿using Dzaba.PhoneCleaner.Lib.Config;
+﻿using Dzaba.PhoneCleaner.Lib.Config.Options;
+using Dzaba.PhoneCleaner.Lib.Handlers.Options;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
     public interface IHandlerFactory
     {
         IHandler CreateHandler(Config.Action model);
-        IOptionHandler CreateOptionHandler(Config.Option model);
+        IOptionHandler CreateOptionHandler(Option model);
     }
 
     internal sealed class HandlerFactory : IHandlerFactory

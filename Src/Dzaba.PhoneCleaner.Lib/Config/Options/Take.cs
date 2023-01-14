@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Xml.Serialization;
 
-namespace Dzaba.PhoneCleaner.Lib.Config
+namespace Dzaba.PhoneCleaner.Lib.Config.Options
 {
     [Serializable]
     public class Take : Option
     {
-        [XmlElement(ElementName = "OlderThan")]
+        [XmlAttribute(AttributeName = "OlderThan")]
         public string OlderThanRaw { get; set; }
 
         [XmlIgnore]

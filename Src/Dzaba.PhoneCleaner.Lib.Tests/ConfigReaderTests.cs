@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using Dzaba.PhoneCleaner.Lib.Config;
+using Dzaba.PhoneCleaner.Lib.Config.Options;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
@@ -32,9 +33,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
   <Copy Path=""Path1"" Destination=""Path2"" Recursive=""true"" OnConflict=""KeepBoth""></Copy>
   <Remove Path=""Path3""></Remove>
   <Remove Path=""Path4"" Content=""true"" ContentRecursive=""true"">
-    <Skip ItemType=""File"">
-      <NewerThan>30.00:00:00</NewerThan>
-    </Skip>
+    <Skip ItemType=""File"" NewerThan=""30.00:00:00"" />
   </Remove>
 </Config>";
 

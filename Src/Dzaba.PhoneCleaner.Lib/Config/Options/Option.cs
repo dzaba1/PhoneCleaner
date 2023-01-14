@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 
-namespace Dzaba.PhoneCleaner.Lib.Config
+namespace Dzaba.PhoneCleaner.Lib.Config.Options
 {
     [Serializable]
     public class Option

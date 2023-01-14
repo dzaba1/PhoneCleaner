@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Dzaba.PhoneCleaner.Lib.Config
+namespace Dzaba.PhoneCleaner.Lib.Config.Options
 {
     [Flags]
     [Serializable]

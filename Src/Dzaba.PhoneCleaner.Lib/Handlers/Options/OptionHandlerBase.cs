@@ -1,7 +1,7 @@
-﻿using Dzaba.PhoneCleaner.Lib.Config;
+﻿using Dzaba.PhoneCleaner.Lib.Config.Options;
 using System;
 
-namespace Dzaba.PhoneCleaner.Lib.Handlers
+namespace Dzaba.PhoneCleaner.Lib.Handlers.Options
 {
     internal abstract class OptionHandlerBase<T> : IOptionHandler
         where T : Option

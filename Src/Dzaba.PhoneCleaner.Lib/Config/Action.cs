@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Serialization;
+using Dzaba.PhoneCleaner.Lib.Config.Options;
 
 namespace Dzaba.PhoneCleaner.Lib.Config
 {

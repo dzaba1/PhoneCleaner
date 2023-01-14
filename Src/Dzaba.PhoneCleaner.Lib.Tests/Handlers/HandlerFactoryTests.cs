@@ -1,6 +1,8 @@
 ﻿using AutoFixture;
 using Dzaba.PhoneCleaner.Lib.Config;
+using Dzaba.PhoneCleaner.Lib.Config.Options;
 using Dzaba.PhoneCleaner.Lib.Handlers;
+using Dzaba.PhoneCleaner.Lib.Handlers.Options;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -55,6 +57,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
         {
             var expected = CreateHandler<Action2>();
             SetupHandlers(CreateHandler<Action1>(), expected, CreateHandler<Action3>());
+            SetupOptionHandlers();
 
             var sut = CreateSut();
 
@@ -66,6 +69,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
         public void CreateHandler_WhenHandlerIsNotRegistered_ThenError()
         {
             SetupHandlers(CreateHandler<Action1>(), CreateHandler<Action3>());
+            SetupOptionHandlers();
 
             var sut = CreateSut();
 
@@ -77,6 +81,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
         public void CreateOptionHandler_WhenHandlerRegistered_ThenItIsReturned()
         {
             var expected = CreateOptionHandler<Option2>();
+            SetupHandlers();
             SetupOptionHandlers(CreateOptionHandler<Option1>(), expected, CreateOptionHandler<Option3>());
 
             var sut = CreateSut();
@@ -88,6 +93,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
         [Test]
         public void CreateOptionHandler_WhenHandlerIsNotRegistered_ThenError()
         {
+            SetupHandlers();
             SetupOptionHandlers(CreateOptionHandler<Option1>(), CreateOptionHandler<Option3>());
 
             var sut = CreateSut();
