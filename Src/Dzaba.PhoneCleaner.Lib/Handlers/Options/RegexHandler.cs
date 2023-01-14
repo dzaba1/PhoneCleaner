@@ -26,8 +26,7 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers.Options
                 return true;
             }
 
-            var regex = new System.Text.RegularExpressions.Regex(model.Pattern, model.RegexOptions);
-            return regex.IsMatch(systemInfo.FullName);
+            return model.RegexInstance.IsMatch(systemInfo.FullName);
         }
     }
 }
