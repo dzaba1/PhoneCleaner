@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using Dzaba.PhoneCleaner.Lib.Device;
 using Dzaba.PhoneCleaner.Lib.Handlers.Options;
 using FluentAssertions;
 using NUnit.Framework;
@@ -32,7 +33,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
                 RegexOptions = regexOptions
             };
 
-            var systemInfo = TestUtils.CreateSystemInfo(fullName);
+            var systemInfo = TestUtils.CreateSystemInfo<IDeviceSystemInfo>(fullName);
 
             var sut = CreateSut();
 

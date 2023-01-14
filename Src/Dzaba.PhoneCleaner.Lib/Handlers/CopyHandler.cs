@@ -12,15 +12,19 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
     {
         private readonly ILogger<CopyHandler> logger;
         private readonly IOptionsEvaluator optionsEvaluator;
+        private readonly IIOHelper ioHelper;
 
         public CopyHandler(ILogger<CopyHandler> logger,
-            IOptionsEvaluator optionsEvaluator)
+            IOptionsEvaluator optionsEvaluator,
+            IIOHelper ioHelper)
         {
             Require.NotNull(logger, nameof(logger));
             Require.NotNull(optionsEvaluator, nameof(optionsEvaluator));
+            Require.NotNull(ioHelper, nameof(ioHelper));
 
             this.logger = logger;
             this.optionsEvaluator = optionsEvaluator;
+            this.ioHelper = ioHelper;
         }
 
         protected override int Handle(Copy model, IDeviceConnection deviceConnection, CleanData cleanData)
@@ -34,7 +38,7 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
 
             var fullDest = Path.Combine(cleanData.WorkingDir, model.Destination);
 
-            logger.LogInformation("Invoking the copy action from '{Path}' to '{Destination}'. Recursive: {ContentRecursive}. On file conflict: {OnFileConflict}",
+            logger.LogInformation("Invoking the copy action from '{Path}' to '{Destination}'. Recursive: {Recursive}. On file conflict: {OnFileConflict}",
                 path, fullDest, model.Recursive, model.OnConflict);
 
             if (!deviceConnection.DirectoryExists(path))
@@ -67,7 +71,7 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
             {
                 string targetFilePath = Path.Combine(destinationDir, file.Name);
 
-                if (TryHandleFile(file, targetFilePath, deviceConnection, model.OnConflict))
+                if (ioHelper.TryCopyFile(file, targetFilePath, deviceConnection, model.OnConflict))
                 {
                     affected++;
                 }
@@ -88,34 +92,6 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
             }
 
             return affected;
-        }
-
-        private bool TryHandleFile(IDeviceFileInfo file, string targetFilePath, IDeviceConnection deviceConnection, OnFileConflict onFileConflict)
-        {
-            var currentTargetFilePath = targetFilePath;
-            var overwrite = false;
-
-            if (File.Exists(currentTargetFilePath))
-            {
-                switch (onFileConflict)
-                {
-                    default: throw new ArgumentOutOfRangeException($"Unknown {nameof(OnFileConflict)} value: {onFileConflict}");
-                    case OnFileConflict.RaiseError:
-                        throw new IOException($"The file '{targetFilePath}' already exists.");
-                    case OnFileConflict.DoNothing:
-                        return false;
-                    case OnFileConflict.Overwrite:
-                        overwrite = true;
-                        break;
-                    case OnFileConflict.KeepBoth:
-                        currentTargetFilePath = DeviceIOUtils.GetNewTargetFileName(currentTargetFilePath);
-                        break;
-                }
-            }
-
-            logger.LogInformation("Copy file '{Path}' to '{Destination}'.", file, targetFilePath);
-            deviceConnection.CopyFile(file.FullName, targetFilePath, overwrite);
-            return true;
         }
     }
 }

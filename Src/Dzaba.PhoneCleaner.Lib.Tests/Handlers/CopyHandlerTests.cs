@@ -37,6 +37,11 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
                 .Setup(x => x.IsOk(null, device, It.IsAny<IDeviceSystemInfo>()))
                 .Returns(true);
 
+            Fixture.FreezeMock<IIOHelper>()
+                .Setup(x => x.TryCopyFile(It.IsNotNull<IDeviceFileInfo>(), It.IsNotNull<string>(), device, model.OnConflict))
+                .Callback<IDeviceFileInfo, string, IDeviceConnection, OnFileConflict>((f, t, d, o) => d.CopyFile(f.FullName, t, false))
+                .Returns(true);
+
             var sut = CreateSut();
 
             var result = sut.Handle(model, device, GetCleanData());
@@ -69,100 +74,6 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
         }
 
         [Test]
-        public void Handle_WhenFileExistButOnConflictDoNothing_ThenFileIsNotCopied()
-        {
-            var expected = "Not touched";
-
-            var model = new Copy()
-            {
-                Path = Path.Combine(DeviceRootDir, "Dir1"),
-                Destination = Path.Combine(WorkingDir, "Dir1"),
-                OnConflict = OnFileConflict.DoNothing,
-                Recursive = false
-            };
-
-            var device = GetTempPathDevice();
-            SetupSomeDeviceFiles();
-
-            Fixture.FreezeMock<IOptionsEvaluator>()
-                .Setup(x => x.IsOk(null, device, It.IsAny<IDeviceSystemInfo>()))
-                .Returns(true);
-
-            var fileToCheck = Path.Combine(model.Destination, "file1.txt");
-            Directory.CreateDirectory(model.Destination);
-            File.WriteAllText(fileToCheck, expected);
-
-            var sut = CreateSut();
-
-            var result = sut.Handle(model, device, GetCleanData());
-
-            result.Should().Be(1);
-            Directory.EnumerateFiles(model.Destination).Should().HaveCount(2);
-            File.ReadAllText(fileToCheck).Should().Be(expected);
-        }
-
-        [Test]
-        public void Handle_WhenFileExistAndOverride_ThenFileIsCopied()
-        {
-            var expected = "Test";
-
-            var model = new Copy()
-            {
-                Path = Path.Combine(DeviceRootDir, "Dir1"),
-                Destination = Path.Combine(WorkingDir, "Dir1"),
-                OnConflict = OnFileConflict.Overwrite,
-                Recursive = false
-            };
-
-            var device = GetTempPathDevice();
-            SetupSomeDeviceFiles();
-
-            Fixture.FreezeMock<IOptionsEvaluator>()
-                .Setup(x => x.IsOk(null, device, It.IsAny<IDeviceSystemInfo>()))
-                .Returns(true);
-
-            var fileToCheck = Path.Combine(model.Destination, "file1.txt");
-            Directory.CreateDirectory(model.Destination);
-            File.WriteAllText(fileToCheck, "Not touched");
-
-            var sut = CreateSut();
-
-            var result = sut.Handle(model, device, GetCleanData());
-
-            result.Should().Be(2);
-            Directory.EnumerateFiles(model.Destination).Should().HaveCount(2);
-            File.ReadAllText(fileToCheck).Should().Be(expected);
-        }
-
-        [Test]
-        public void Handle_WhenFileExistAndRaiseError_ThenError()
-        {
-            var model = new Copy()
-            {
-                Path = Path.Combine(DeviceRootDir, "Dir1"),
-                Destination = Path.Combine(WorkingDir, "Dir1"),
-                OnConflict = OnFileConflict.RaiseError,
-                Recursive = false
-            };
-
-            var device = GetTempPathDevice();
-            SetupSomeDeviceFiles();
-
-            Fixture.FreezeMock<IOptionsEvaluator>()
-                .Setup(x => x.IsOk(null, device, It.IsAny<IDeviceSystemInfo>()))
-                .Returns(true);
-
-            var fileToCheck = Path.Combine(model.Destination, "file1.txt");
-            Directory.CreateDirectory(model.Destination);
-            File.WriteAllText(fileToCheck, "Not touched");
-
-            var sut = CreateSut();
-
-            this.Invoking(s => sut.Handle(model, device, GetCleanData()))
-                .Should().Throw<IOException>();
-        }
-
-        [Test]
         public void Handle_WhenRecursive_ThenDirectorisAreCopied()
         {
             var model = new Copy()
@@ -178,6 +89,11 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
 
             Fixture.FreezeMock<IOptionsEvaluator>()
                 .Setup(x => x.IsOk(null, device, It.IsAny<IDeviceSystemInfo>()))
+                .Returns(true);
+
+            Fixture.FreezeMock<IIOHelper>()
+                .Setup(x => x.TryCopyFile(It.IsNotNull<IDeviceFileInfo>(), It.IsNotNull<string>(), device, model.OnConflict))
+                .Callback<IDeviceFileInfo, string, IDeviceConnection, OnFileConflict>((f, t, d, o) => d.CopyFile(f.FullName, t, false))
                 .Returns(true);
 
             var sut = CreateSut();
@@ -207,10 +123,6 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
 
             var device = GetTempPathDevice();
             SetupSomeDeviceFiles();
-
-            Fixture.FreezeMock<IOptionsEvaluator>()
-                .Setup(x => x.IsOk(null, device, It.IsAny<IDeviceSystemInfo>()))
-                .Returns(false);
 
             var sut = CreateSut();
 
