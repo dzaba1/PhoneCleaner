@@ -5,12 +5,11 @@ using Dzaba.PhoneCleaner.Lib.Config.Options;
 namespace Dzaba.PhoneCleaner.Lib.Config
 {
     [Serializable]
-    //[XmlInclude(typeof(Skip))]
     public class Action
     {
         [XmlElement(Type = typeof(Skip))]
         [XmlElement(Type = typeof(Take))]
-        //[XmlArray]
+        [XmlElement(Type = typeof(Regex))]
         public Option[] Options { get; set; }
     }
 }
