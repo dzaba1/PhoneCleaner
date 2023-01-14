@@ -26,6 +26,12 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers.Options
                     var span = dateTimeProvider.Now() - systemInfo.ModificationTime.Value;
                     return span < model.NewerThan.Value;
                 }
+
+                if (model.OlderThan != null)
+                {
+                    var span = dateTimeProvider.Now() - systemInfo.ModificationTime.Value;
+                    return span > model.OlderThan.Value;
+                }
             }
 
             return true;
