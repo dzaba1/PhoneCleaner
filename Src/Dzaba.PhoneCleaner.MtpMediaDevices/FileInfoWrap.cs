@@ -1,22 +1,14 @@
-﻿using Dzaba.PhoneCleaner.Lib;
-using Dzaba.PhoneCleaner.Lib.Device;
+﻿using Dzaba.PhoneCleaner.Lib.Device;
 using MediaDevices;
 
 namespace Dzaba.PhoneCleaner.MtpMediaDevices
 {
-    internal sealed class FileInfoWrap : IDeviceFileInfo
+    internal sealed class FileInfoWrap : FileSystemInfoWrap<MediaFileInfo>, IDeviceFileInfo
     {
-        private readonly MediaFileInfo fileInfo;
-
-        public FileInfoWrap(MediaFileInfo fileInfo)
+        public FileInfoWrap(MediaFileInfo info)
+            : base(info)
         {
-            Require.NotNull(fileInfo, nameof(fileInfo));
 
-            this.fileInfo = fileInfo;
         }
-
-        public string Name => fileInfo.Name;
-
-        public string FullName => fileInfo.FullName;
     }
 }

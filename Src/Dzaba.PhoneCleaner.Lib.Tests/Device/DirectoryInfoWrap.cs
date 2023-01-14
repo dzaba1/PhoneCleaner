@@ -3,19 +3,12 @@ using System.IO;
 
 namespace Dzaba.PhoneCleaner.Lib.Tests.Device
 {
-    internal sealed class DirectoryInfoWrap : IDeviceDirectoryInfo
+    internal sealed class DirectoryInfoWrap : FileSystemInfoWrap<DirectoryInfo>, IDeviceDirectoryInfo
     {
-        private readonly DirectoryInfo dirInfo;
-
-        public DirectoryInfoWrap(DirectoryInfo dirInfo)
+        public DirectoryInfoWrap(DirectoryInfo info)
+            : base(info)
         {
-            Require.NotNull(dirInfo, nameof(dirInfo));
 
-            this.dirInfo = dirInfo;
         }
-
-        public string Name => dirInfo.Name;
-
-        public string FullName => dirInfo.FullName;
     }
 }
