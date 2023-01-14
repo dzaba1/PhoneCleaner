@@ -8,9 +8,9 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
 {
     internal sealed class CopyHandler : HandlerBase<Copy>
     {
-        private readonly ILogger<RemoveHandler> logger;
+        private readonly ILogger<CopyHandler> logger;
 
-        public CopyHandler(ILogger<RemoveHandler> logger)
+        public CopyHandler(ILogger<CopyHandler> logger)
         {
             Require.NotNull(logger, nameof(logger));
 

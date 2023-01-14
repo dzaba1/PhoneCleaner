@@ -9,6 +9,7 @@ namespace Dzaba.PhoneCleaner.Lib.Config
     {
         [XmlElement(Type = typeof(Copy))]
         [XmlElement(Type = typeof(Remove))]
+        [XmlElement(Type = typeof(RemoveDirectory))]
         public Action[] Actions { get; set; }
     }
 }
