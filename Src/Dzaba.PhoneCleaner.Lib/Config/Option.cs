@@ -4,9 +4,9 @@ using System.Xml.Serialization;
 namespace Dzaba.PhoneCleaner.Lib.Config
 {
     [Serializable]
-    public class Action
+    public class Option
     {
-        [XmlElement(Type = typeof(Skip))]
-        public Option[] Options { get; set; }
+        [XmlAttribute]
+        public IOItemType ItemType { get; set; } = IOItemType.Both;
     }
 }
