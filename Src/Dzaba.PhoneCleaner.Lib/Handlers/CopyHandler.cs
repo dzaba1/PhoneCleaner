@@ -1,29 +1,22 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Config;
 using Dzaba.PhoneCleaner.Lib.Device;
-using Dzaba.PhoneCleaner.Lib.Handlers.Options;
 using Microsoft.Extensions.Logging;
-using System;
 using System.IO;
-using System.Linq;
 
 namespace Dzaba.PhoneCleaner.Lib.Handlers
 {
     internal sealed class CopyHandler : HandlerBase<Copy>
     {
         private readonly ILogger<CopyHandler> logger;
-        private readonly IOptionsEvaluator optionsEvaluator;
         private readonly IIOHelper ioHelper;
 
         public CopyHandler(ILogger<CopyHandler> logger,
-            IOptionsEvaluator optionsEvaluator,
             IIOHelper ioHelper)
         {
             Require.NotNull(logger, nameof(logger));
-            Require.NotNull(optionsEvaluator, nameof(optionsEvaluator));
             Require.NotNull(ioHelper, nameof(ioHelper));
 
             this.logger = logger;
-            this.optionsEvaluator = optionsEvaluator;
             this.ioHelper = ioHelper;
         }
 
@@ -63,9 +56,7 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
 
             var affected = 0;
 
-            var files = deviceConnection.EnumerateFiles(sourceDir.FullName, SearchOption.TopDirectoryOnly)
-                .Where(f => optionsEvaluator.IsOk(model.Options, deviceConnection, f))
-                .ToArray();
+            var files = ioHelper.EnumerateFiles(deviceConnection, sourceDir, model.Options);
 
             foreach (var file in files)
             {
@@ -79,9 +70,7 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
 
             if (model.Recursive)
             {
-                var subDirs = deviceConnection.EnumerateDirectories(sourceDir.FullName, SearchOption.TopDirectoryOnly)
-                    .Where(d => optionsEvaluator.IsOk(model.Options, deviceConnection, d))
-                    .ToArray();
+                var subDirs = ioHelper.EnumerateDirectories(deviceConnection, sourceDir, model.Options);
 
                 foreach (var subDir in subDirs)
                 {

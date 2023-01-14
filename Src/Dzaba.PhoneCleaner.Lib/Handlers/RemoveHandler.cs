@@ -1,25 +1,23 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Config;
 using Dzaba.PhoneCleaner.Lib.Device;
-using Dzaba.PhoneCleaner.Lib.Handlers.Options;
 using Microsoft.Extensions.Logging;
 using System.IO;
-using System.Linq;
 
 namespace Dzaba.PhoneCleaner.Lib.Handlers
 {
     internal sealed class RemoveHandler : HandlerBase<Remove>
     {
         private readonly ILogger<RemoveHandler> logger;
-        private readonly IOptionsEvaluator optionsEvaluator;
+        private readonly IIOHelper ioHelper;
 
         public RemoveHandler(ILogger<RemoveHandler> logger,
-            IOptionsEvaluator optionsEvaluator)
+            IIOHelper ioHelper)
         {
             Require.NotNull(logger, nameof(logger));
-            Require.NotNull(optionsEvaluator, nameof(optionsEvaluator));
+            Require.NotNull(ioHelper, nameof(ioHelper));
 
             this.logger = logger;
-            this.optionsEvaluator = optionsEvaluator;
+            this.ioHelper = ioHelper;
         }
 
         protected override int Handle(Remove model, IDeviceConnection deviceConnection, CleanData cleanData)
@@ -40,11 +38,17 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
                 return 0;
             }
 
+            var pathInfo = deviceConnection.GetDirectoryInfo(path);
+
+            return RemoveDirectory(deviceConnection, pathInfo, model);
+        }
+
+        private int RemoveDirectory(IDeviceConnection deviceConnection,
+            IDeviceDirectoryInfo dir, Remove model)
+        {
             var affected = 0;
 
-            var files = deviceConnection.EnumerateFiles(path, SearchOption.TopDirectoryOnly)
-                .Where(f => optionsEvaluator.IsOk(model.Options, deviceConnection, f))
-                .ToArray();
+            var files = ioHelper.EnumerateFiles(deviceConnection, dir, model.Options);
 
             foreach (var file in files)
             {
@@ -54,14 +58,12 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
 
             if (model.Recursive)
             {
-                var directories = deviceConnection.EnumerateDirectories(path, SearchOption.TopDirectoryOnly)
-                    .Where(d => optionsEvaluator.IsOk(model.Options, deviceConnection, d))
-                    .ToArray();
+                var subDirs = ioHelper.EnumerateDirectories(deviceConnection, dir, model.Options);
 
-                foreach (var dir in directories)
+                foreach (var subDir in subDirs)
                 {
-                    deviceConnection.DeleteDirectory(dir.FullName, true);
-                    affected++;
+                    var subDirAffected = RemoveDirectory(deviceConnection, subDir, model);
+                    affected += subDirAffected;
                 }
             }
 

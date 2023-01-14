@@ -56,7 +56,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
 
             var result = sut.Handle(model, device, GetCleanData());
 
-            result.Should().Be(4);
+            result.Should().Be(14);
             Directory.Exists(model.Path).Should().BeTrue();
             Directory.EnumerateFiles(model.Path).Should().BeEmpty();
             Directory.EnumerateDirectories(model.Path).Should().BeEmpty();
