@@ -4,31 +4,31 @@ using System.Xml.Serialization;
 namespace Dzaba.PhoneCleaner.Lib.Config
 {
     [Serializable]
-    public class Skip : Option
+    public class Take : Option
     {
-        [XmlElement(ElementName = "NewerThan")]
-        public string NewerThanRaw { get; set; }
+        [XmlElement(ElementName = "OlderThan")]
+        public string OlderThanRaw { get; set; }
 
         [XmlIgnore]
-        public TimeSpan? NewerThan
+        public TimeSpan? OlderThan
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(NewerThanRaw))
+                if (string.IsNullOrWhiteSpace(OlderThanRaw))
                 {
                     return null;
                 }
 
-                return TimeSpan.Parse(NewerThanRaw);
+                return TimeSpan.Parse(OlderThanRaw);
             }
             set
             {
                 if (value == null)
                 {
-                    NewerThanRaw = null;
+                    OlderThanRaw = null;
                 }
 
-                NewerThanRaw = value.ToString();
+                OlderThanRaw = value.ToString();
             }
         }
     }
