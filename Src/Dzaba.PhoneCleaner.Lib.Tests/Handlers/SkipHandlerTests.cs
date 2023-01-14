@@ -1,9 +1,7 @@
 ﻿using AutoFixture;
 using Dzaba.PhoneCleaner.Lib.Config.Options;
-using Dzaba.PhoneCleaner.Lib.Device;
 using Dzaba.PhoneCleaner.Lib.Handlers.Options;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 using System;
 
@@ -25,14 +23,6 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             return fixture.Create<SkipHandler>();
         }
 
-        private IDeviceSystemInfo CreateSystemInfo(DateTime? modifiedTime = null)
-        {
-            var mock = new Mock<IDeviceSystemInfo>();
-            mock.Setup(x => x.ModificationTime)
-                .Returns(modifiedTime);
-            return mock.Object;
-        }
-
         [TestCase(10, 10, false)]
         [TestCase(10, 9, false)]
         [TestCase(10, 11, true)]
@@ -44,7 +34,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
                 .Returns(now);
 
             var modificationTime = now.AddDays(-modificationTimeDays);
-            var systemInfo = CreateSystemInfo(modificationTime);
+            var systemInfo = TestUtils.CreateSystemInfo(modifiedTime: modificationTime);
 
             var skip = new Skip
             {
@@ -68,7 +58,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
                 .Returns(now);
 
             var modificationTime = now.AddDays(-modificationTimeDays);
-            var systemInfo = CreateSystemInfo(modificationTime);
+            var systemInfo = TestUtils.CreateSystemInfo(modifiedTime: modificationTime);
 
             var skip = new Skip
             {
