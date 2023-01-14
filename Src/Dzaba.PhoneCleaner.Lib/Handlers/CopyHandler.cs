@@ -1,5 +1,6 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Config;
 using Microsoft.Extensions.Logging;
+using System;
 using System.IO;
 
 namespace Dzaba.PhoneCleaner.Lib.Handlers
@@ -26,8 +27,8 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
 
             var fullDest = Path.Combine(cleanData.WorkingDir, model.Destination);
 
-            logger.LogInformation("Invoking the copy action from '{Path}' to '{Destination}'. Recursive: {ContentRecursive}. Override: {Override}",
-                path, fullDest, model.Recursive, model.Override);
+            logger.LogInformation("Invoking the copy action from '{Path}' to '{Destination}'. Recursive: {ContentRecursive}. On file conflict: {OnFileConflict}",
+                path, fullDest, model.Recursive, model.OnConflict);
 
             if (!deviceConnection.DirectoryExists(path))
             {
@@ -35,12 +36,12 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
                 return 0;
             }
 
-            return CopyDirectory(deviceConnection, path, fullDest, model.Recursive, model.Override);
+            return CopyDirectory(deviceConnection, path, fullDest, model.Recursive, model.OnConflict);
         }
 
         private int CopyDirectory(IDeviceConnection deviceConnection,
             string sourceDir, string destinationDir,
-            bool recursive, bool overwrite)
+            bool recursive, OnFileConflict onFileConflict)
         {
             if (!Directory.Exists(destinationDir))
             {
@@ -54,10 +55,8 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
                 var fileName = DeviceIOUtils.GetFileOrDirectoryName(file);
                 string targetFilePath = Path.Combine(destinationDir, fileName);
 
-                if (overwrite || !File.Exists(targetFilePath))
+                if (TryHandleFile(file, targetFilePath, deviceConnection, onFileConflict))
                 {
-                    logger.LogInformation("Copy file '{Path}' to '{Destination}'.", file, targetFilePath);
-                    deviceConnection.CopyFile(file, targetFilePath, overwrite);
                     affected++;
                 }
             }
@@ -68,12 +67,58 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
                 {
                     var subDirName = DeviceIOUtils.GetFileOrDirectoryName(subDir);
                     string newDestinationDir = Path.Combine(destinationDir, subDirName);
-                    var subDirAffected = CopyDirectory(deviceConnection, subDir, newDestinationDir, true, overwrite);
+                    var subDirAffected = CopyDirectory(deviceConnection, subDir, newDestinationDir, true, onFileConflict);
                     affected += subDirAffected;
                 }
             }
 
             return affected;
+        }
+
+        private bool TryHandleFile(string file, string targetFilePath, IDeviceConnection deviceConnection, OnFileConflict onFileConflict)
+        {
+            var currentTargetFilePath = targetFilePath;
+            var overwrite = false;
+
+            if (File.Exists(currentTargetFilePath))
+            {
+                switch (onFileConflict)
+                {
+                    default: throw new ArgumentOutOfRangeException($"Unknown {nameof(OnFileConflict)} value: {onFileConflict}");
+                    case OnFileConflict.RaiseError:
+                        throw new IOException($"The file '{targetFilePath}' already exists.");
+                    case OnFileConflict.DoNothing:
+                        return false;
+                    case OnFileConflict.Overwrite:
+                        overwrite = true;
+                        break;
+                    case OnFileConflict.KeepBoth:
+                        currentTargetFilePath = GetNewTargetFileName(currentTargetFilePath);
+                        break;
+                }
+            }
+
+            logger.LogInformation("Copy file '{Path}' to '{Destination}'.", file, targetFilePath);
+            deviceConnection.CopyFile(file, targetFilePath, overwrite);
+            return true;
+        }
+
+        private string GetNewTargetFileName(string targetFilePath)
+        {
+            var fileInfo = new FileInfo(targetFilePath);
+            var nameWithoutExt = Path.GetFileNameWithoutExtension(targetFilePath);
+
+            var i = 0;
+            while (true)
+            {
+                i++;
+                var newName = $"{nameWithoutExt}_{i}";
+                var full = Path.Combine(fileInfo.DirectoryName, newName + fileInfo.Extension);
+                if (!File.Exists(full))
+                {
+                    return full;
+                }
+            }
         }
     }
 }

@@ -16,6 +16,6 @@ namespace Dzaba.PhoneCleaner.Lib.Config
         public bool Recursive { get; set; }
 
         [XmlAttribute]
-        public bool Override { get; set; }
+        public OnFileConflict OnConflict { get; set; } = OnFileConflict.RaiseError;
     }
 }

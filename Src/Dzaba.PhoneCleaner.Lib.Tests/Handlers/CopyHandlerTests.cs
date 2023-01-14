@@ -23,7 +23,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             {
                 Path = Path.Combine(DeviceRootDir, "Dir1"),
                 Destination = Path.Combine(WorkingDir, "Dir1"),
-                Override = true,
+                OnConflict = OnFileConflict.RaiseError,
                 Recursive = false
             };
 
@@ -47,7 +47,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             {
                 Path = Path.Combine(DeviceRootDir, "Dir1"),
                 Destination = Path.Combine(WorkingDir, "Dir1"),
-                Override = true,
+                OnConflict = OnFileConflict.RaiseError,
                 Recursive = false
             };
 
@@ -62,7 +62,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
         }
 
         [Test]
-        public void Handle_WhenFileExistButNotOverride_ThenFileIsNotCopied()
+        public void Handle_WhenFileExistButOnConflictDoNothing_ThenFileIsNotCopied()
         {
             var expected = "Not touched";
 
@@ -70,7 +70,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             {
                 Path = Path.Combine(DeviceRootDir, "Dir1"),
                 Destination = Path.Combine(WorkingDir, "Dir1"),
-                Override = false,
+                OnConflict = OnFileConflict.DoNothing,
                 Recursive = false
             };
 
@@ -99,7 +99,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             {
                 Path = Path.Combine(DeviceRootDir, "Dir1"),
                 Destination = Path.Combine(WorkingDir, "Dir1"),
-                Override = true,
+                OnConflict = OnFileConflict.Overwrite,
                 Recursive = false
             };
 
@@ -120,13 +120,37 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
         }
 
         [Test]
+        public void Handle_WhenFileExistAndRaiseError_ThenError()
+        {
+            var model = new Copy()
+            {
+                Path = Path.Combine(DeviceRootDir, "Dir1"),
+                Destination = Path.Combine(WorkingDir, "Dir1"),
+                OnConflict = OnFileConflict.RaiseError,
+                Recursive = false
+            };
+
+            var device = GetTempPathDevice();
+            SetupSomeDeviceFiles();
+
+            var fileToCheck = Path.Combine(model.Destination, "file1.txt");
+            Directory.CreateDirectory(model.Destination);
+            File.WriteAllText(fileToCheck, "Not touched");
+
+            var sut = CreateSut();
+
+            this.Invoking(s => sut.Handle(model, device, GetCleanData()))
+                .Should().Throw<IOException>();
+        }
+
+        [Test]
         public void Handle_WhenRecursive_ThenDirectorisAreCopied()
         {
             var model = new Copy()
             {
                 Path = Path.Combine(DeviceRootDir, "Dir1"),
                 Destination = Path.Combine(WorkingDir, "Dir1"),
-                Override = true,
+                OnConflict = OnFileConflict.RaiseError,
                 Recursive = true
             };
 

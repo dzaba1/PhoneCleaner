@@ -28,7 +28,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
         {
             var xml = @"<Config>
   <Copy Path=""Path1"" Destination=""Path2""></Copy>
-  <Copy Path=""Path1"" Destination=""Path2"" Recursive=""true"" Override=""true""></Copy>
+  <Copy Path=""Path1"" Destination=""Path2"" Recursive=""true"" OnConflict=""KeepBoth""></Copy>
   <Remove Path=""Path3""></Remove>
   <Remove Path=""Path4"" Content=""true"" ContentRecursive=""true""></Remove>
 </Config>";
@@ -45,8 +45,8 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
             var remove1 = (Remove)result.Actions[2];
             var remove2 = (Remove)result.Actions[3];
 
-            AssertCopyAction(copy1, "Path1", "Path2", false, false);
-            AssertCopyAction(copy2, "Path1", "Path2", true, true);
+            AssertCopyAction(copy1, "Path1", "Path2", false, OnFileConflict.RaiseError);
+            AssertCopyAction(copy2, "Path1", "Path2", true, OnFileConflict.KeepBoth);
 
             AssertRemoveAction(remove1, "Path3", false, false);
             AssertRemoveAction(remove2, "Path4", true, true);
@@ -59,12 +59,12 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
             result.ContentRecursive.Should().Be(contentRecursive);
         }
 
-        private void AssertCopyAction(Copy result, string path, string dest, bool recursive, bool @override)
+        private void AssertCopyAction(Copy result, string path, string dest, bool recursive, OnFileConflict onConflict)
         {
             result.Path.Should().Be(path);
             result.Destination.Should().Be(dest);
             result.Recursive.Should().Be(recursive);
-            result.Override.Should().Be(@override);
+            result.OnConflict.Should().Be(onConflict);
         }
     }
 }
