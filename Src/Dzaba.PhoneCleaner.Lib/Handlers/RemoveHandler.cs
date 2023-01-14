@@ -1,19 +1,25 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Config;
 using Dzaba.PhoneCleaner.Lib.Device;
+using Dzaba.PhoneCleaner.Lib.Handlers.Options;
 using Microsoft.Extensions.Logging;
 using System.IO;
+using System.Linq;
 
 namespace Dzaba.PhoneCleaner.Lib.Handlers
 {
     internal sealed class RemoveHandler : HandlerBase<Remove>
     {
         private readonly ILogger<RemoveHandler> logger;
+        private readonly IOptionsEvaluator optionsEvaluator;
 
-        public RemoveHandler(ILogger<RemoveHandler> logger)
+        public RemoveHandler(ILogger<RemoveHandler> logger,
+            IOptionsEvaluator optionsEvaluator)
         {
             Require.NotNull(logger, nameof(logger));
+            Require.NotNull(optionsEvaluator, nameof(optionsEvaluator));
 
             this.logger = logger;
+            this.optionsEvaluator = optionsEvaluator;
         }
 
         protected override int Handle(Remove model, IDeviceConnection deviceConnection, CleanData cleanData)
@@ -25,8 +31,8 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
             var root = deviceConnection.GetRootOrThrow(cleanData.DriveIndex);
             var path = Path.Combine(root, model.Path);
 
-            logger.LogInformation("Invoking the remove action for path '{Path}'. Content flag: {Content}. Content recursive: {ContentRecursive}",
-                path, model.Content, model.ContentRecursive);
+            logger.LogInformation("Invoking the remove action for path '{Path}'. Recursive: {Recursive}",
+                path, model.Recursive);
 
             if (!deviceConnection.DirectoryExists(path))
             {
@@ -34,34 +40,30 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
                 return 0;
             }
 
-            if (model.Content)
-            {
-                var affected = 0;
+            var affected = 0;
 
-                var files = deviceConnection.EnumerateFiles(path, SearchOption.TopDirectoryOnly);
-                foreach (var file in files)
+            var files = deviceConnection.EnumerateFiles(path, SearchOption.TopDirectoryOnly)
+                .Where(f => optionsEvaluator.IsOk(model.Options, deviceConnection, f.FullName, false));
+
+            foreach (var file in files)
+            {
+                deviceConnection.DeleteFile(file.FullName);
+                affected++;
+            }
+
+            if (model.Recursive)
+            {
+                var directories = deviceConnection.EnumerateDirectories(path, SearchOption.TopDirectoryOnly)
+                    .Where(d => optionsEvaluator.IsOk(model.Options, deviceConnection, d.FullName, true));
+
+                foreach (var dir in directories)
                 {
-                    deviceConnection.DeleteFile(file.FullName);
+                    deviceConnection.DeleteDirectory(dir.FullName, true);
                     affected++;
                 }
-
-                if (model.ContentRecursive)
-                {
-                    var directories = deviceConnection.EnumerateDirectories(path, SearchOption.TopDirectoryOnly);
-                    foreach (var dir in directories)
-                    {
-                        deviceConnection.DeleteDirectory(dir.FullName, true);
-                        affected++;
-                    }
-                }
-
-                return affected;
             }
-            else
-            {
-                deviceConnection.DeleteDirectory(path, true);
-                return 1;
-            }
+
+            return affected;
         }
     }
 }

@@ -10,9 +10,6 @@ namespace Dzaba.PhoneCleaner.Lib.Config
         public string Path { get; set; }
 
         [XmlAttribute]
-        public bool Content { get; set; }
-
-        [XmlAttribute]
-        public bool ContentRecursive { get; set; }
+        public bool Recursive { get; set; }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using AutoFixture;
 using Dzaba.PhoneCleaner.Lib.Config;
 using Dzaba.PhoneCleaner.Lib.Handlers;
+using Dzaba.PhoneCleaner.Lib.Handlers.Options;
 using FluentAssertions;
+using Moq;
 using NUnit.Framework;
 using System.IO;
 
@@ -16,34 +18,12 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
         }
 
         [Test]
-        public void Handle_WhenContentFlagIsNotSpecified_ThenDirectoryIsDeleted()
-        {
-            var model = new Remove()
-            {
-                Path = Path.Combine(DeviceRootDir, "Dir1"),
-                Content = false,
-                ContentRecursive = false
-            };
-
-            var device = GetTempPathDevice();
-            SetupSomeDeviceFiles();
-
-            var sut = CreateSut();
-
-            var result = sut.Handle(model, device, GetCleanData());
-
-            result.Should().Be(1);
-            Directory.Exists(model.Path).Should().BeFalse();
-        }
-
-        [Test]
         public void Handle_WhenDirectoryDoesntExists_ThenNothing()
         {
             var model = new Remove()
             {
                 Path = Path.Combine(DeviceRootDir, "Dir1"),
-                Content = false,
-                ContentRecursive = false
+                Recursive = false
             };
 
             var device = GetTempPathDevice();
@@ -56,17 +36,20 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
         }
 
         [Test]
-        public void Handle_WhenContentAndRecursiveFlagIsSpecified_ThenDirectoryIsEmpty()
+        public void Handle_WhenRecursiveFlagIsSpecified_ThenDirectoryIsEmpty()
         {
             var model = new Remove()
             {
                 Path = Path.Combine(DeviceRootDir, "Dir1"),
-                Content = true,
-                ContentRecursive = true
+                Recursive = true
             };
 
             var device = GetTempPathDevice();
             SetupSomeDeviceFiles();
+
+            Fixture.FreezeMock<IOptionsEvaluator>()
+                .Setup(x => x.IsOk(null, device, It.IsAny<string>(), It.IsAny<bool>()))
+                .Returns(true);
 
             var sut = CreateSut();
 
@@ -79,17 +62,20 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
         }
 
         [Test]
-        public void Handle_WhenContentFlagIsSpecified_ThenDirectoryDoesntHaveFiles()
+        public void Handle_WhenNotRecursive_ThenDirectoryDoesntHaveFiles()
         {
             var model = new Remove()
             {
                 Path = Path.Combine(DeviceRootDir, "Dir1"),
-                Content = true,
-                ContentRecursive = false
+                Recursive = false
             };
 
             var device = GetTempPathDevice();
             SetupSomeDeviceFiles();
+
+            Fixture.FreezeMock<IOptionsEvaluator>()
+                .Setup(x => x.IsOk(null, device, It.IsAny<string>(), It.IsAny<bool>()))
+                .Returns(true);
 
             var sut = CreateSut();
 
@@ -98,6 +84,32 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             result.Should().Be(2);
             Directory.Exists(model.Path).Should().BeTrue();
             Directory.EnumerateFiles(model.Path).Should().BeEmpty();
+            Directory.EnumerateDirectories(model.Path).Should().HaveCount(2);
+        }
+
+        [Test]
+        public void Handle_WhenNotOk_ThenNothing()
+        {
+            var model = new Remove()
+            {
+                Path = Path.Combine(DeviceRootDir, "Dir1"),
+                Recursive = false
+            };
+
+            var device = GetTempPathDevice();
+            SetupSomeDeviceFiles();
+
+            Fixture.FreezeMock<IOptionsEvaluator>()
+                .Setup(x => x.IsOk(null, device, It.IsAny<string>(), It.IsAny<bool>()))
+                .Returns(false);
+
+            var sut = CreateSut();
+
+            var result = sut.Handle(model, device, GetCleanData());
+
+            result.Should().Be(0);
+            Directory.Exists(model.Path).Should().BeTrue();
+            Directory.EnumerateFiles(model.Path).Should().HaveCount(2);
             Directory.EnumerateDirectories(model.Path).Should().HaveCount(2);
         }
     }

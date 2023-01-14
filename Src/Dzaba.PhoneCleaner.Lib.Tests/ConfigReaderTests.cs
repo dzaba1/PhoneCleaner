@@ -32,7 +32,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
   <Copy Path=""Path1"" Destination=""Path2""></Copy>
   <Copy Path=""Path1"" Destination=""Path2"" Recursive=""true"" OnConflict=""KeepBoth""></Copy>
   <Remove Path=""Path3""></Remove>
-  <Remove Path=""Path4"" Content=""true"" ContentRecursive=""true"">
+  <Remove Path=""Path4"" Recursive=""true"">
     <Skip ItemType=""File"" NewerThan=""30.00:00:00"" />
   </Remove>
 </Config>";
@@ -52,19 +52,18 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
             AssertCopyAction(copy1, "Path1", "Path2", false, OnFileConflict.RaiseError);
             AssertCopyAction(copy2, "Path1", "Path2", true, OnFileConflict.KeepBoth);
 
-            AssertRemoveAction(remove1, "Path3", false, false);
-            AssertRemoveAction(remove2, "Path4", true, true);
+            AssertRemoveAction(remove1, "Path3", false);
+            AssertRemoveAction(remove2, "Path4", true);
 
             remove2.Options.Should().HaveCount(1);
             var skip1 = (Skip)remove2.Options[0];
             skip1.NewerThan.Should().Be(TimeSpan.FromDays(30));
         }
 
-        private void AssertRemoveAction(Remove result, string path, bool content, bool contentRecursive)
+        private void AssertRemoveAction(Remove result, string path, bool recursive)
         {
             result.Path.Should().Be(path);
-            result.Content.Should().Be(content);
-            result.ContentRecursive.Should().Be(contentRecursive);
+            result.Recursive.Should().Be(recursive);
         }
 
         private void AssertCopyAction(Copy result, string path, string dest, bool recursive, OnFileConflict onConflict)
