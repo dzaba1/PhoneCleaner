@@ -1,12 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Dzaba.PhoneCleaner.Lib;
+using Microsoft.Extensions.Logging;
 
-namespace Dzaba.PhoneCleaner.Lib
+namespace Dzaba.PhoneCleaner.MtpMediaDevices
 {
-    public interface IDeviceConnectionFactory
-    {
-        IDeviceConnection Create(string deviceName);
-    }
-
     internal sealed class DeviceConnectionFactory : IDeviceConnectionFactory
     {
         private readonly ILoggerFactory loggerFactory;

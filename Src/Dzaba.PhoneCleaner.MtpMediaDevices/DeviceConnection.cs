@@ -1,11 +1,12 @@
-﻿using MediaDevices;
+﻿using Dzaba.PhoneCleaner.Lib;
+using MediaDevices;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Dzaba.PhoneCleaner.Lib
+namespace Dzaba.PhoneCleaner.MtpMediaDevices
 {
     internal sealed class DeviceConnection : IDeviceConnection
     {

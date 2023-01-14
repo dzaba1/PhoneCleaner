@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 
 namespace Dzaba.PhoneCleaner.Lib
@@ -10,7 +9,9 @@ namespace Dzaba.PhoneCleaner.Lib
         {
             Require.NotWhiteSpace(path, nameof(path));
 
-            var split = path.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            var split = path.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                .Select(p => p.Trim())
+                .Where(p => !string.IsNullOrWhiteSpace(p));
             return split.Last();
         }
     }
