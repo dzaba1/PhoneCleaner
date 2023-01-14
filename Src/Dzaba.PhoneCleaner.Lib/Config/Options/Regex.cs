@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace Dzaba.PhoneCleaner.Lib.Config.Options
 {
     [Serializable]
-    public class Regex : Option
+    public sealed class Regex : Option
     {
         [NonSerialized]
         [XmlIgnore]

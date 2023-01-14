@@ -60,7 +60,8 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
             var affected = 0;
 
             var files = deviceConnection.EnumerateFiles(sourceDir.FullName, SearchOption.TopDirectoryOnly)
-                .Where(f => optionsEvaluator.IsOk(model.Options, deviceConnection, f));
+                .Where(f => optionsEvaluator.IsOk(model.Options, deviceConnection, f))
+                .ToArray();
 
             foreach (var file in files)
             {
@@ -75,7 +76,8 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
             if (model.Recursive)
             {
                 var subDirs = deviceConnection.EnumerateDirectories(sourceDir.FullName, SearchOption.TopDirectoryOnly)
-                    .Where(d => optionsEvaluator.IsOk(model.Options, deviceConnection, d));
+                    .Where(d => optionsEvaluator.IsOk(model.Options, deviceConnection, d))
+                    .ToArray();
 
                 foreach (var subDir in subDirs)
                 {
@@ -106,7 +108,7 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
                         overwrite = true;
                         break;
                     case OnFileConflict.KeepBoth:
-                        currentTargetFilePath = GetNewTargetFileName(currentTargetFilePath);
+                        currentTargetFilePath = DeviceIOUtils.GetNewTargetFileName(currentTargetFilePath);
                         break;
                 }
             }
@@ -114,24 +116,6 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
             logger.LogInformation("Copy file '{Path}' to '{Destination}'.", file, targetFilePath);
             deviceConnection.CopyFile(file.FullName, targetFilePath, overwrite);
             return true;
-        }
-
-        private string GetNewTargetFileName(string targetFilePath)
-        {
-            var fileInfo = new FileInfo(targetFilePath);
-            var nameWithoutExt = Path.GetFileNameWithoutExtension(targetFilePath);
-
-            var i = 0;
-            while (true)
-            {
-                i++;
-                var newName = $"{nameWithoutExt}_{i}";
-                var full = Path.Combine(fileInfo.DirectoryName, newName + fileInfo.Extension);
-                if (!File.Exists(full))
-                {
-                    return full;
-                }
-            }
         }
     }
 }

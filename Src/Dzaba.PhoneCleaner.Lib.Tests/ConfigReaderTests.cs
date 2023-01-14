@@ -136,6 +136,24 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
                 take.NewerThan.Should().Be(TimeSpan.FromDays(30));
                 take.OlderThan.Should().Be(TimeSpan.FromDays(40));
             });
+
+            yield return CreateTestCaseData(@"<Config>
+  <Move Path=""Path7"" Destination=""Path8"" />
+</Config>", c =>
+            {
+                c.Actions.Should().HaveCount(1);
+                var move = (Move)c.Actions[0];
+                AssertMoveAction(move, "Path7", "Path8", false, OnFileConflict.RaiseError);
+            });
+
+            yield return CreateTestCaseData(@"<Config>
+  <Move Path=""Path7"" Destination=""Path8"" Recursive=""true"" OnConflict=""KeepBoth"" />
+</Config>", c =>
+            {
+                c.Actions.Should().HaveCount(1);
+                var move = (Move)c.Actions[0];
+                AssertMoveAction(move, "Path7", "Path8", true, OnFileConflict.KeepBoth);
+            });
         }
 
         [TestCaseSource(nameof(GetTestData))]
@@ -157,6 +175,14 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
         }
 
         private static void AssertCopyAction(Copy result, string path, string dest, bool recursive, OnFileConflict onConflict)
+        {
+            result.Path.Should().Be(path);
+            result.Destination.Should().Be(dest);
+            result.Recursive.Should().Be(recursive);
+            result.OnConflict.Should().Be(onConflict);
+        }
+
+        private static void AssertMoveAction(Move result, string path, string dest, bool recursive, OnFileConflict onConflict)
         {
             result.Path.Should().Be(path);
             result.Destination.Should().Be(dest);

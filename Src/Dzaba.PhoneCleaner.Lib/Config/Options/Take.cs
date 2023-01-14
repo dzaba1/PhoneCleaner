@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace Dzaba.PhoneCleaner.Lib.Config.Options
 {
     [Serializable]
-    public class Take : Option
+    public sealed class Take : Option
     {
         [XmlAttribute(AttributeName = "NewerThan")]
         public string NewerThanRaw { get; set; }

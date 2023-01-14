@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace Dzaba.PhoneCleaner.Lib.Config
 {
     [Serializable]
-    public class RemoveDirectory : Action
+    public sealed class RemoveDirectory : Action
     {
         [XmlAttribute]
         public string Path { get; set; }
