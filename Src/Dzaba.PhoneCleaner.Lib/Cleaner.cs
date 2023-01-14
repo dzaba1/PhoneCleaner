@@ -45,7 +45,7 @@ namespace Dzaba.PhoneCleaner.Lib
 
             var affected = 0;
 
-            using (var device = deviceConnectionFactory.Create(deviceName))
+            using (var device = deviceConnectionFactory.Create(deviceName, cleanData.TestOnly))
             {
                 foreach (var action in config.Actions)
                 {

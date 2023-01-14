@@ -13,13 +13,16 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
     {
         private readonly MediaDevice mediaDevice;
         private readonly ILogger<DeviceConnection> logger;
+        private readonly bool testOnly;
 
         public DeviceConnection(string friendlyName,
-            ILogger<DeviceConnection> logger)
+            ILogger<DeviceConnection> logger,
+            bool testOnly)
         {
             Require.NotNull(logger, nameof(logger));
 
             this.logger = logger;
+            this.testOnly = testOnly;
 
             mediaDevice = MediaDevice.GetDevices()
                 .FirstOrDefault(x => x.FriendlyName == friendlyName);
@@ -41,7 +44,11 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
             Require.NotNull(dest, nameof(dest));
 
             logger.LogInformation("Copy file from '{DeviceName}' '{Path}' to destination stream.", FriendlyName, source);
-            mediaDevice.DownloadFile(source, dest);
+
+            if (!testOnly)
+            {
+                mediaDevice.DownloadFile(source, dest);
+            }
         }
 
         public void DeleteDirectory(string path, bool recursive)
@@ -49,7 +56,11 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
             Require.NotWhiteSpace(path, nameof(path));
 
             logger.LogInformation("Deleting directory at '{DeviceName}' '{Path}'. Recursive: {Recursive}.", FriendlyName, path, recursive);
-            mediaDevice.DeleteDirectory(path, recursive);
+
+            if (!testOnly)
+            {
+                mediaDevice.DeleteDirectory(path, recursive);
+            }
         }
 
         public void DeleteFile(string path)
@@ -57,7 +68,11 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
             Require.NotWhiteSpace(path, nameof(path));
 
             logger.LogInformation("Deleting file at '{DeviceName}' '{Path}'.", FriendlyName, path);
-            mediaDevice.DeleteFile(path);
+
+            if (!testOnly)
+            {
+                mediaDevice.DeleteFile(path);
+            }
         }
 
         public bool DirectoryExists(string path)

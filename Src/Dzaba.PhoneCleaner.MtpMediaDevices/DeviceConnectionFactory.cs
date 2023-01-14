@@ -15,11 +15,11 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
             this.loggerFactory = loggerFactory;
         }
 
-        public IDeviceConnection Create(string deviceName)
+        public IDeviceConnection Create(string deviceName, bool testOnly)
         {
             Require.NotWhiteSpace(deviceName, nameof(deviceName));
 
-            return new DeviceConnection(deviceName, loggerFactory.CreateLogger<DeviceConnection>());
+            return new DeviceConnection(deviceName, loggerFactory.CreateLogger<DeviceConnection>(), testOnly);
         }
     }
 }

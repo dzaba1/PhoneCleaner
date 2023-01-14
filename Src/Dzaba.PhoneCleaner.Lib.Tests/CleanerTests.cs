@@ -28,7 +28,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
         {
             var device = new Mock<IDeviceConnection>();
             fixture.FreezeMock<IDeviceConnectionFactory>()
-                .Setup(x => x.Create(deviceName))
+                .Setup(x => x.Create(deviceName, false))
                 .Returns(device.Object);
             return device;
         }
