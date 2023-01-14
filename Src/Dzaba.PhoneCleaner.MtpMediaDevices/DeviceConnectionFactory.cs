@@ -1,4 +1,5 @@
 ﻿using Dzaba.PhoneCleaner.Lib;
+using Dzaba.PhoneCleaner.Lib.Device;
 using Microsoft.Extensions.Logging;
 
 namespace Dzaba.PhoneCleaner.MtpMediaDevices

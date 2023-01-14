@@ -1,4 +1,5 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Config;
+using Dzaba.PhoneCleaner.Lib.Device;
 using Microsoft.Extensions.Logging;
 using System.IO;
 
@@ -40,7 +41,7 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
                 var files = deviceConnection.EnumerateFiles(path, SearchOption.TopDirectoryOnly);
                 foreach (var file in files)
                 {
-                    deviceConnection.DeleteFile(file);
+                    deviceConnection.DeleteFile(file.FullName);
                     affected++;
                 }
 
@@ -49,7 +50,7 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
                     var directories = deviceConnection.EnumerateDirectories(path, SearchOption.TopDirectoryOnly);
                     foreach (var dir in directories)
                     {
-                        deviceConnection.DeleteDirectory(dir, true);
+                        deviceConnection.DeleteDirectory(dir.FullName, true);
                         affected++;
                     }
                 }

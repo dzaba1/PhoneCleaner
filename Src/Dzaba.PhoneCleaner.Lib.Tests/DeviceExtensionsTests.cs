@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using Dzaba.PhoneCleaner.Lib.Device;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using System;

@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Dzaba.PhoneCleaner.Lib.Device;
 
-namespace Dzaba.PhoneCleaner.Lib.Tests
+namespace Dzaba.PhoneCleaner.Lib.Tests.Device
 {
     public sealed class TempPathDevice : IDeviceConnection
     {
@@ -39,7 +41,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
 
         public void Dispose()
         {
-            
+
         }
 
         public IEnumerable<string> EnumerableDrives()
@@ -47,19 +49,33 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
             yield return rootPath;
         }
 
-        public IEnumerable<string> EnumerateDirectories(string path, SearchOption searchOption)
+        public IEnumerable<IDeviceDirectoryInfo> EnumerateDirectories(string path, SearchOption searchOption)
         {
-            return Directory.EnumerateDirectories(path, "*", searchOption);
+            return Directory.EnumerateDirectories(path, "*", searchOption)
+                .Select(GetDirectoryInfo);
         }
 
-        public IEnumerable<string> EnumerateFiles(string path, SearchOption searchOption)
+        public IEnumerable<IDeviceFileInfo> EnumerateFiles(string path, SearchOption searchOption)
         {
-            return Directory.EnumerateFiles(path, "*.*", searchOption);
+            return Directory.EnumerateFiles(path, "*.*", searchOption)
+                .Select(GetFileInfo);
         }
 
         public bool FileExists(string path)
         {
             return File.Exists(path);
+        }
+
+        public IDeviceDirectoryInfo GetDirectoryInfo(string path)
+        {
+            var info = new DirectoryInfo(path);
+            return new DirectoryInfoWrap(info);
+        }
+
+        public IDeviceFileInfo GetFileInfo(string path)
+        {
+            var info = new FileInfo(path);
+            return new FileInfoWrap(info);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using Dzaba.PhoneCleaner.Lib.Config;
+using Dzaba.PhoneCleaner.Lib.Device;
 using Dzaba.PhoneCleaner.Lib.Handlers;
 using FluentAssertions;
 using Moq;

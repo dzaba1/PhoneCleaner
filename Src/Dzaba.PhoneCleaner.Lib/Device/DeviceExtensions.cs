@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace Dzaba.PhoneCleaner.Lib
+namespace Dzaba.PhoneCleaner.Lib.Device
 {
     public static class DeviceExtensions
     {

@@ -1,4 +1,4 @@
-﻿namespace Dzaba.PhoneCleaner.Lib
+﻿namespace Dzaba.PhoneCleaner.Lib.Device
 {
     public interface IDeviceConnectionFactory
     {

@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using Dzaba.PhoneCleaner.Lib.Tests.Device;
 using NUnit.Framework;
 using System.IO;
 

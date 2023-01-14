@@ -1,4 +1,5 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Config;
+using Dzaba.PhoneCleaner.Lib.Device;
 using Dzaba.PhoneCleaner.Lib.Handlers;
 using Microsoft.Extensions.Logging;
 using System;

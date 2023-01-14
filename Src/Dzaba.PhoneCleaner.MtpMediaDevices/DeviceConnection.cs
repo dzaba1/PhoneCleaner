@@ -1,4 +1,5 @@
 ﻿using Dzaba.PhoneCleaner.Lib;
+using Dzaba.PhoneCleaner.Lib.Device;
 using MediaDevices;
 using Microsoft.Extensions.Logging;
 using System;
@@ -79,20 +80,22 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
             return mediaDevice.GetDrives().Select(d => d.RootDirectory.FullName);
         }
 
-        public IEnumerable<string> EnumerateDirectories(string path, SearchOption searchOption)
+        public IEnumerable<IDeviceDirectoryInfo> EnumerateDirectories(string path, SearchOption searchOption)
         {
             Require.NotWhiteSpace(path, nameof(path));
 
             logger.LogInformation("Getting all directories from '{DeviceName}' '{Path}'. Search options: {SearchOption}.", FriendlyName, path, searchOption);
-            return mediaDevice.EnumerateDirectories(path, "*", searchOption);
+            return mediaDevice.EnumerateDirectories(path, "*", searchOption)
+                .Select(GetDirectoryInfo);
         }
 
-        public IEnumerable<string> EnumerateFiles(string path, SearchOption searchOption)
+        public IEnumerable<IDeviceFileInfo> EnumerateFiles(string path, SearchOption searchOption)
         {
             Require.NotWhiteSpace(path, nameof(path));
 
             logger.LogInformation("Getting all files from '{DeviceName}' '{Path}'. Search options: {SearchOption}.", FriendlyName, path, searchOption);
-            return mediaDevice.EnumerateFiles(path, "*.*", searchOption);
+            return mediaDevice.EnumerateFiles(path, "*.*", searchOption)
+                .Select(GetFileInfo);
         }
 
         public bool FileExists(string path)
@@ -100,6 +103,26 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
             Require.NotWhiteSpace(path, nameof(path));
 
             return mediaDevice.FileExists(path);
+        }
+
+        public IDeviceDirectoryInfo GetDirectoryInfo(string path)
+        {
+            Require.NotWhiteSpace(path, nameof(path));
+
+            logger.LogInformation("Getting directory info '{DeviceName}' '{Path}'.", FriendlyName, path);
+
+            var dirInfo = mediaDevice.GetDirectoryInfo(path);
+            return new DirectoryInfoWrap(dirInfo);
+        }
+
+        public IDeviceFileInfo GetFileInfo(string path)
+        {
+            Require.NotWhiteSpace(path, nameof(path));
+
+            logger.LogInformation("Getting file info '{DeviceName}' '{Path}'.", FriendlyName, path);
+
+            var fileInfo = mediaDevice.GetFileInfo(path);
+            return new FileInfoWrap(fileInfo);
         }
     }
 }

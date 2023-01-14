@@ -1,4 +1,5 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Config;
+using Dzaba.PhoneCleaner.Lib.Device;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
@@ -36,11 +37,13 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
                 return 0;
             }
 
-            return CopyDirectory(deviceConnection, path, fullDest, model.Recursive, model.OnConflict);
+            var pathInfo = deviceConnection.GetDirectoryInfo(path);
+
+            return CopyDirectory(deviceConnection, pathInfo, fullDest, model.Recursive, model.OnConflict);
         }
 
         private int CopyDirectory(IDeviceConnection deviceConnection,
-            string sourceDir, string destinationDir,
+            IDeviceDirectoryInfo sourceDir, string destinationDir,
             bool recursive, OnFileConflict onFileConflict)
         {
             if (!Directory.Exists(destinationDir))
@@ -50,10 +53,9 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
 
             var affected = 0;
 
-            foreach (var file in deviceConnection.EnumerateFiles(sourceDir, SearchOption.TopDirectoryOnly))
+            foreach (var file in deviceConnection.EnumerateFiles(sourceDir.FullName, SearchOption.TopDirectoryOnly))
             {
-                var fileName = DeviceIOUtils.GetFileOrDirectoryName(file);
-                string targetFilePath = Path.Combine(destinationDir, fileName);
+                string targetFilePath = Path.Combine(destinationDir, file.Name);
 
                 if (TryHandleFile(file, targetFilePath, deviceConnection, onFileConflict))
                 {
@@ -63,10 +65,9 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
 
             if (recursive)
             {
-                foreach (var subDir in deviceConnection.EnumerateDirectories(sourceDir, SearchOption.TopDirectoryOnly))
+                foreach (var subDir in deviceConnection.EnumerateDirectories(sourceDir.FullName, SearchOption.TopDirectoryOnly))
                 {
-                    var subDirName = DeviceIOUtils.GetFileOrDirectoryName(subDir);
-                    string newDestinationDir = Path.Combine(destinationDir, subDirName);
+                    string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
                     var subDirAffected = CopyDirectory(deviceConnection, subDir, newDestinationDir, true, onFileConflict);
                     affected += subDirAffected;
                 }
@@ -75,7 +76,7 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
             return affected;
         }
 
-        private bool TryHandleFile(string file, string targetFilePath, IDeviceConnection deviceConnection, OnFileConflict onFileConflict)
+        private bool TryHandleFile(IDeviceFileInfo file, string targetFilePath, IDeviceConnection deviceConnection, OnFileConflict onFileConflict)
         {
             var currentTargetFilePath = targetFilePath;
             var overwrite = false;
@@ -99,7 +100,7 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
             }
 
             logger.LogInformation("Copy file '{Path}' to '{Destination}'.", file, targetFilePath);
-            deviceConnection.CopyFile(file, targetFilePath, overwrite);
+            deviceConnection.CopyFile(file.FullName, targetFilePath, overwrite);
             return true;
         }
 

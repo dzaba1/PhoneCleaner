@@ -1,4 +1,5 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Config;
+using Dzaba.PhoneCleaner.Lib.Device;
 
 namespace Dzaba.PhoneCleaner.Lib.Handlers
 {
