@@ -1,5 +1,6 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Device;
 using MediaDevices;
+using System.Linq;
 
 namespace Dzaba.PhoneCleaner.MtpMediaDevices
 {
@@ -9,6 +10,11 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
             : base(info)
         {
 
+        }
+
+        public bool IsEmpty()
+        {
+            return !Info.EnumerateFiles().Any() && !Info.EnumerateDirectories().Any();
         }
     }
 }

@@ -64,6 +64,11 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
                 {
                     var subDirAffected = RemoveDirectory(deviceConnection, subDir, model);
                     affected += subDirAffected;
+
+                    if (subDir.IsEmpty())
+                    {
+                        deviceConnection.DeleteDirectory(subDir.FullName, false);
+                    }
                 }
             }
 
