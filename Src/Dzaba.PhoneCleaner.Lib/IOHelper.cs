@@ -65,7 +65,7 @@ namespace Dzaba.PhoneCleaner.Lib
                 }
             }
 
-            logger.LogInformation("Copy file '{Path}' to '{Destination}'.", file, currentTargetFilePath);
+            logger.LogInformation("Copy file '{Path}' to '{Destination}'.", file.FullName, currentTargetFilePath);
             deviceConnection.CopyFile(file.FullName, currentTargetFilePath, overwrite);
             return true;
         }
