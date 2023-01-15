@@ -1,11 +1,12 @@
 ﻿namespace Dzaba.PhoneCleaner
 {
-    public enum ExitCode
+    internal enum ExitCode
     {
         Ok = 0,
         Unknown = 1,
         EmptyWorkingDir,
         MissingConfigFile,
-        EmptyDeviceName
+        EmptyDeviceName,
+        EmptyConfigFile
     }
 }

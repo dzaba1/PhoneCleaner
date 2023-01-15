@@ -6,7 +6,7 @@ using System.IO;
 
 namespace Dzaba.PhoneCleaner
 {
-    public interface IApp
+    internal interface IApp
     {
         int Run(CleanData data);
     }
@@ -60,6 +60,16 @@ namespace Dzaba.PhoneCleaner
             if (string.IsNullOrWhiteSpace(data.WorkingDir))
             {
                 throw new ExitCodeException("The provided working directory is empty.", ExitCode.EmptyWorkingDir);
+            }
+
+            if (string.IsNullOrWhiteSpace(data.ConfigFilepath))
+            {
+                throw new ExitCodeException("The provided configuration file path is empty.", ExitCode.EmptyConfigFile);
+            }
+
+            if (!Path.IsPathRooted(data.ConfigFilepath))
+            {
+                data.ConfigFilepath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, data.ConfigFilepath);
             }
 
             if (!File.Exists(data.ConfigFilepath))

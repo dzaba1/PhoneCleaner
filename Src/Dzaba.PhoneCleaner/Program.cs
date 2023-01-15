@@ -4,25 +4,28 @@ using Dzaba.PhoneCleaner.Serilog;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog.Events;
 using System;
-using System.IO;
 
 namespace Dzaba.PhoneCleaner
 {
     internal static class Program
     {
+        /// <summary>
+        /// Main function.
+        /// </summary>
+        /// <param name="workingDir">The main directory where all files will be copied from the device.</param>
+        /// <param name="deviceName">The friendly name of the device.</param>
+        /// <param name="driveIndex">The ordinal index of the device storage.</param>
+        /// <param name="configFilepath">The path to the confiuguration file.</param>
+        /// <param name="testOnly">If set then any write operations like copy or delete won't be executed. Only log traces.</param>
+        /// <returns></returns>
         public static int Main(string workingDir,
             string deviceName,
             int driveIndex = 0,
-            string configFilepath = null,
+            string configFilepath = "config.xml",
             bool testOnly = false)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(configFilepath))
-                {
-                    configFilepath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.xml");
-                }
-
                 var data = new CleanData
                 {
                     ConfigFilepath = configFilepath,

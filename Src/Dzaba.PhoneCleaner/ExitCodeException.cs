@@ -3,9 +3,8 @@ using System.Runtime.Serialization;
 
 namespace Dzaba.PhoneCleaner
 {
-
 	[Serializable]
-	public class ExitCodeException : Exception
+	internal class ExitCodeException : Exception
 	{
 		public ExitCode ExitCode { get; }
 
