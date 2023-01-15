@@ -1,7 +1,7 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Device;
-using Dzaba.PhoneCleaner.Lib;
 using System;
 using MediaDevices;
+using Dzaba.PhoneCleaner.Utils;
 
 namespace Dzaba.PhoneCleaner.MtpMediaDevices
 {

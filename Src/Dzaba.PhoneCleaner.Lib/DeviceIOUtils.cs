@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using Dzaba.PhoneCleaner.Utils;
+using System.IO;
 using System.Linq;
 
 namespace Dzaba.PhoneCleaner.Lib

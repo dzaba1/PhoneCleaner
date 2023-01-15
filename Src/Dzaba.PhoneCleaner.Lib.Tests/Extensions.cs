@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using Dzaba.PhoneCleaner.Utils;
 using Moq;
 
 namespace Dzaba.PhoneCleaner.Lib.Tests

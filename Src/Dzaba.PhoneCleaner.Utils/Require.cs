@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Dzaba.PhoneCleaner.Lib
+namespace Dzaba.PhoneCleaner.Utils
 {
     public static class Require
     {

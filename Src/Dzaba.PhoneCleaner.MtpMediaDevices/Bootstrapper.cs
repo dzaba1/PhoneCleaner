@@ -1,5 +1,5 @@
-﻿using Dzaba.PhoneCleaner.Lib;
-using Dzaba.PhoneCleaner.Lib.Device;
+﻿using Dzaba.PhoneCleaner.Lib.Device;
+using Dzaba.PhoneCleaner.Utils;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Dzaba.PhoneCleaner.MtpMediaDevices

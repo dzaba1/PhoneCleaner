@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Dzaba.PhoneCleaner.Lib\Dzaba.PhoneCleaner.Lib.csproj" />
+    <ProjectReference Include="..\Dzaba.PhoneCleaner.Serilog\Dzaba.PhoneCleaner.Serilog.csproj" />
   </ItemGroup>
   
 </Project>

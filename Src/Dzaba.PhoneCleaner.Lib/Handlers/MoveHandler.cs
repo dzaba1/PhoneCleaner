@@ -1,9 +1,9 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Config;
 using Dzaba.PhoneCleaner.Lib.Device;
 using Dzaba.PhoneCleaner.Lib.Handlers.Options;
+using Dzaba.PhoneCleaner.Utils;
 using Microsoft.Extensions.Logging;
 using System.IO;
-using System.Linq;
 
 namespace Dzaba.PhoneCleaner.Lib.Handlers
 {

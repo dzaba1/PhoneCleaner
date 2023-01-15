@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using Dzaba.PhoneCleaner.Lib.Device;
+using Dzaba.PhoneCleaner.Utils;
 
 namespace Dzaba.PhoneCleaner.Lib.Tests.Device
 {

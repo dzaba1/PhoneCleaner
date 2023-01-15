@@ -9,7 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dzaba.PhoneCleaner.Lib", "S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dzaba.PhoneCleaner.Lib.Tests", "Src\Dzaba.PhoneCleaner.Lib.Tests\Dzaba.PhoneCleaner.Lib.Tests.csproj", "{19B910B8-A937-4EA7-A6EA-39C9F08606D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dzaba.PhoneCleaner.MtpMediaDevices", "Src\Dzaba.PhoneCleaner.MtpMediaDevices\Dzaba.PhoneCleaner.MtpMediaDevices.csproj", "{38BA13A6-181C-4859-A758-9C681612A952}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dzaba.PhoneCleaner.MtpMediaDevices", "Src\Dzaba.PhoneCleaner.MtpMediaDevices\Dzaba.PhoneCleaner.MtpMediaDevices.csproj", "{38BA13A6-181C-4859-A758-9C681612A952}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dzaba.PhoneCleaner.Serilog", "Src\Dzaba.PhoneCleaner.Serilog\Dzaba.PhoneCleaner.Serilog.csproj", "{3E68F3E1-B231-46B0-A97E-FEA40E532754}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dzaba.PhoneCleaner.Utils", "Src\Dzaba.PhoneCleaner.Utils\Dzaba.PhoneCleaner.Utils.csproj", "{29E4DB56-FCCF-42CD-A69C-C37CED999100}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{38BA13A6-181C-4859-A758-9C681612A952}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38BA13A6-181C-4859-A758-9C681612A952}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38BA13A6-181C-4859-A758-9C681612A952}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E68F3E1-B231-46B0-A97E-FEA40E532754}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E68F3E1-B231-46B0-A97E-FEA40E532754}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E68F3E1-B231-46B0-A97E-FEA40E532754}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E68F3E1-B231-46B0-A97E-FEA40E532754}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29E4DB56-FCCF-42CD-A69C-C37CED999100}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29E4DB56-FCCF-42CD-A69C-C37CED999100}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29E4DB56-FCCF-42CD-A69C-C37CED999100}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29E4DB56-FCCF-42CD-A69C-C37CED999100}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
