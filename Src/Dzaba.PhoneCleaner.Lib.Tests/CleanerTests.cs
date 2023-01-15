@@ -46,9 +46,11 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
         [Test]
         public void Clean_WhenHandlerAndConfig_ThenCorrectAffectedSum()
         {
-            var configFile = "config";
-            var deviceName = "Device";
-            var cleanData = new CleanData();
+            var cleanData = new CleanData
+            {
+                ConfigFilepath = "config",
+                DeviceName = "Device"
+            };
             var action1 = new Model1();
             var action2 = new Model2();
             var config = new Config.Config
@@ -61,10 +63,10 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
             };
 
             fixture.FreezeMock<IConfigReader>()
-                .Setup(x => x.Read(configFile))
+                .Setup(x => x.Read(cleanData.ConfigFilepath))
                 .Returns(config);
 
-            var device = SetupDevice(deviceName);
+            var device = SetupDevice(cleanData.DeviceName);
 
             var handlerFactory = fixture.FreezeMock<IHandlerFactory>();
             var handler1 = CreateHandler(action1, device.Object, cleanData, 2);
@@ -77,7 +79,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
 
             var sut = CreateSut();
 
-            var result = sut.Clean(configFile, deviceName, cleanData);
+            var result = sut.Clean(cleanData);
 
             result.Should().Be(4);
         }
@@ -85,9 +87,11 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
         [Test]
         public void Clean_WhenOneHandlerFailed_ThenProgramSurvives()
         {
-            var configFile = "config";
-            var deviceName = "Device";
-            var cleanData = new CleanData();
+            var cleanData = new CleanData
+            {
+                ConfigFilepath = "config",
+                DeviceName = "Device"
+            };
             var action1 = new Model1();
             var action2 = new Model2();
             var config = new Config.Config
@@ -100,10 +104,10 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
             };
 
             fixture.FreezeMock<IConfigReader>()
-                .Setup(x => x.Read(configFile))
+                .Setup(x => x.Read(cleanData.ConfigFilepath))
                 .Returns(config);
 
-            var device = SetupDevice(deviceName);
+            var device = SetupDevice(cleanData.DeviceName);
 
             var handlerFactory = fixture.FreezeMock<IHandlerFactory>();
             var handler1 = CreateHandler(action1, device.Object, cleanData, 2);
@@ -121,7 +125,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
 
             var sut = CreateSut();
 
-            var result = sut.Clean(configFile, deviceName, cleanData);
+            var result = sut.Clean(cleanData);
 
             result.Should().Be(2);
         }

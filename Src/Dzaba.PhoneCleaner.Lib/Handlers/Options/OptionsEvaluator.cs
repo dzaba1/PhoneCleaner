@@ -14,10 +14,10 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers.Options
 
     internal sealed class OptionsEvaluator : IOptionsEvaluator
     {
-        private readonly IHandlerFactory handlerFactory;
+        private readonly IOptionHandlerFactory handlerFactory;
         private readonly ILogger<OptionsEvaluator> logger;
 
-        public OptionsEvaluator(IHandlerFactory handlerFactory,
+        public OptionsEvaluator(IOptionHandlerFactory handlerFactory,
             ILogger<OptionsEvaluator> logger)
         {
             Require.NotNull(handlerFactory, nameof(handlerFactory));

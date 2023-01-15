@@ -4,7 +4,7 @@ using System.Linq;
 using Dzaba.PhoneCleaner.Lib.Device;
 using Dzaba.PhoneCleaner.Utils;
 
-namespace Dzaba.PhoneCleaner.Lib.Tests.Device
+namespace Dzaba.PhoneCleaner.Lib.Tests.Integration.Device
 {
     public sealed class TempPathDevice : IDeviceConnection
     {

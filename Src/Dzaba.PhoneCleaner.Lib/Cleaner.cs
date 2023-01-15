@@ -10,7 +10,7 @@ namespace Dzaba.PhoneCleaner.Lib
 {
     public interface ICleaner
     {
-        int Clean(string configFilepath, string deviceName, CleanData cleanData);
+        int Clean(CleanData cleanData);
     }
 
     internal sealed class Cleaner : ICleaner
@@ -36,17 +36,15 @@ namespace Dzaba.PhoneCleaner.Lib
             this.logger = logger;
         }
 
-        public int Clean(string configFilepath, string deviceName, CleanData cleanData)
+        public int Clean(CleanData cleanData)
         {
-            Require.NotWhiteSpace(configFilepath, nameof(configFilepath));
-            Require.NotWhiteSpace(deviceName, nameof(deviceName));
             Require.NotNull(cleanData, nameof(cleanData));
 
-            var config = configReader.Read(configFilepath);
+            var config = configReader.Read(cleanData.ConfigFilepath);
 
             var affected = 0;
 
-            using (var device = deviceConnectionFactory.Create(deviceName, cleanData.TestOnly))
+            using (var device = deviceConnectionFactory.Create(cleanData.DeviceName, cleanData.TestOnly))
             {
                 foreach (var action in config.Actions)
                 {

@@ -1,24 +1,15 @@
-﻿using AutoFixture;
-using Dzaba.PhoneCleaner.Lib.Config;
-using Dzaba.PhoneCleaner.Lib.Device;
-using Dzaba.PhoneCleaner.Lib.Handlers;
-using Dzaba.PhoneCleaner.Lib.Handlers.Options;
+﻿using Dzaba.PhoneCleaner.Lib.Config;
+using Dzaba.PhoneCleaner.Lib.Config.Options;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 using System.IO;
 using System.Linq;
 
-namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
+namespace Dzaba.PhoneCleaner.Lib.Tests.Integration.Handlers
 {
     [TestFixture]
     public class CopyHandlerTests : HandlerTestFixture
     {
-        private CopyHandler CreateSut()
-        {
-            return Fixture.Create<CopyHandler>();
-        }
-
         [Test]
         public void Handle_WhenNotRecursive_ThenOnlyFilesAreCopied()
         {
@@ -30,21 +21,11 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
                 Recursive = false
             };
 
-            var device = GetTempPathDevice();
+            MakeConfig(model);
             SetupSomeDeviceFiles();
 
-            Fixture.FreezeMock<IOptionsEvaluator>()
-                .Setup(x => x.IsOk(null, device, It.IsAny<IDeviceSystemInfo>()))
-                .Returns(true);
-
-            Fixture.FreezeMock<IIOHelper>()
-                .Setup(x => x.TryCopyFile(It.IsNotNull<IDeviceFileInfo>(), It.IsNotNull<string>(), device, model.OnConflict))
-                .Callback<IDeviceFileInfo, string, IDeviceConnection, OnFileConflict>((f, t, d, o) => d.CopyFile(f.FullName, t, false))
-                .Returns(true);
-
-            var sut = CreateSut();
-
-            var result = sut.Handle(model, device, GetCleanData());
+            var cleaner = CreateCleaner();
+            var result = cleaner.Clean(GetCleanData());
 
             result.Should().Be(2);
             Directory.Exists(model.Destination).Should().BeTrue();
@@ -63,11 +44,10 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
                 Recursive = false
             };
 
-            var device = GetTempPathDevice();
+            MakeConfig(model);
 
-            var sut = CreateSut();
-
-            var result = sut.Handle(model, device, GetCleanData());
+            var cleaner = CreateCleaner();
+            var result = cleaner.Clean(GetCleanData());
 
             result.Should().Be(0);
             Directory.Exists(model.Destination).Should().BeFalse();
@@ -84,21 +64,11 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
                 Recursive = true
             };
 
-            var device = GetTempPathDevice();
+            MakeConfig(model);
             SetupSomeDeviceFiles();
 
-            Fixture.FreezeMock<IOptionsEvaluator>()
-                .Setup(x => x.IsOk(null, device, It.IsAny<IDeviceSystemInfo>()))
-                .Returns(true);
-
-            Fixture.FreezeMock<IIOHelper>()
-                .Setup(x => x.TryCopyFile(It.IsNotNull<IDeviceFileInfo>(), It.IsNotNull<string>(), device, model.OnConflict))
-                .Callback<IDeviceFileInfo, string, IDeviceConnection, OnFileConflict>((f, t, d, o) => d.CopyFile(f.FullName, t, false))
-                .Returns(true);
-
-            var sut = CreateSut();
-
-            var result = sut.Handle(model, device, GetCleanData());
+            var cleaner = CreateCleaner();
+            var result = cleaner.Clean(GetCleanData());
 
             result.Should().Be(14);
             Directory.Exists(model.Destination).Should().BeTrue();
@@ -118,15 +88,22 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
                 Path = Path.Combine(DeviceRootDir, "Dir1"),
                 Destination = Path.Combine(WorkingDir, "Dir1"),
                 OnConflict = OnFileConflict.RaiseError,
-                Recursive = false
+                Recursive = false,
+                Options = new Option[]
+                {
+                    new Regex
+                    {
+                        Pattern = "invalid",
+                        RegexOptions = System.Text.RegularExpressions.RegexOptions.IgnoreCase
+                    }
+                }
             };
 
-            var device = GetTempPathDevice();
+            MakeConfig(model);
             SetupSomeDeviceFiles();
 
-            var sut = CreateSut();
-
-            var result = sut.Handle(model, device, GetCleanData());
+            var cleaner = CreateCleaner();
+            var result = cleaner.Clean(GetCleanData());
 
             result.Should().Be(0);
             Directory.Exists(model.Destination).Should().BeTrue();

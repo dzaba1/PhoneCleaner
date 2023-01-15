@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using Dzaba.PhoneCleaner.Lib.Config.Options;
 using Dzaba.PhoneCleaner.Lib.Device;
-using Dzaba.PhoneCleaner.Lib.Handlers;
 using Dzaba.PhoneCleaner.Lib.Handlers.Options;
 using FluentAssertions;
 using Moq;
@@ -73,7 +72,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             handler.Setup(x => x.IsOk(It.IsIn<Option>(options), device, fileInfo))
                 .Returns(true);
 
-            fixture.FreezeMock<IHandlerFactory>()
+            fixture.FreezeMock<IOptionHandlerFactory>()
                 .Setup(x => x.CreateOptionHandler(It.IsIn<Option>(options)))
                 .Returns(handler.Object);
 
@@ -98,7 +97,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             handler.Setup(x => x.IsOk(It.IsIn<Option>(options), device, dirInfo))
                 .Returns(true);
 
-            fixture.FreezeMock<IHandlerFactory>()
+            fixture.FreezeMock<IOptionHandlerFactory>()
                 .Setup(x => x.CreateOptionHandler(It.IsIn<Option>(options)))
                 .Returns(handler.Object);
 
@@ -127,7 +126,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             handler.Setup(x => x.IsOk(options[2], device, fileInfo))
                 .Returns(true);
 
-            fixture.FreezeMock<IHandlerFactory>()
+            fixture.FreezeMock<IOptionHandlerFactory>()
                 .Setup(x => x.CreateOptionHandler(It.IsIn<Option>(options)))
                 .Returns(handler.Object);
 

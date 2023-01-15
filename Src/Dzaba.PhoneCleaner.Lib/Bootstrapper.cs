@@ -16,6 +16,7 @@ namespace Dzaba.PhoneCleaner.Lib
             services.AddTransient<IDateTimeProvider, DateTimeProvider>();
             services.AddTransient<IIOHelper, IOHelper>();
             services.AddTransient<IHandlerFactory, HandlerFactory>();
+            services.AddTransient<IOptionHandlerFactory, OptionHandlerFactory>();
             services.AddTransient<IOptionsEvaluator, OptionsEvaluator>();
             services.AddTransient<IConfigReader, ConfigReader>();
 

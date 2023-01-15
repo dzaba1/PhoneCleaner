@@ -1,8 +1,6 @@
 ﻿using AutoFixture;
 using Dzaba.PhoneCleaner.Lib.Config;
-using Dzaba.PhoneCleaner.Lib.Config.Options;
 using Dzaba.PhoneCleaner.Lib.Handlers;
-using Dzaba.PhoneCleaner.Lib.Handlers.Options;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -31,22 +29,9 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             fixture.Inject<IEnumerable<IHandler>>(handlers);
         }
 
-        private void SetupOptionHandlers(params IOptionHandler[] handlers)
-        {
-            fixture.Inject<IEnumerable<IOptionHandler>>(handlers);
-        }
-
         private IHandler CreateHandler<T>() where T : Action
         {
             var handler = new Mock<IHandler>();
-            handler.Setup(x => x.ModelType)
-                .Returns(typeof(T));
-            return handler.Object;
-        }
-
-        private IOptionHandler CreateOptionHandler<T>() where T : Option
-        {
-            var handler = new Mock<IOptionHandler>();
             handler.Setup(x => x.ModelType)
                 .Returns(typeof(T));
             return handler.Object;
@@ -57,7 +42,6 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
         {
             var expected = CreateHandler<Action2>();
             SetupHandlers(CreateHandler<Action1>(), expected, CreateHandler<Action3>());
-            SetupOptionHandlers();
 
             var sut = CreateSut();
 
@@ -69,36 +53,10 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
         public void CreateHandler_WhenHandlerIsNotRegistered_ThenError()
         {
             SetupHandlers(CreateHandler<Action1>(), CreateHandler<Action3>());
-            SetupOptionHandlers();
 
             var sut = CreateSut();
 
             this.Invoking(s => sut.CreateHandler(new Action2()))
-                .Should().Throw<System.InvalidOperationException>();
-        }
-
-        [Test]
-        public void CreateOptionHandler_WhenHandlerRegistered_ThenItIsReturned()
-        {
-            var expected = CreateOptionHandler<Option2>();
-            SetupHandlers();
-            SetupOptionHandlers(CreateOptionHandler<Option1>(), expected, CreateOptionHandler<Option3>());
-
-            var sut = CreateSut();
-
-            var result = sut.CreateOptionHandler(new Option2());
-            result.Should().Be(expected);
-        }
-
-        [Test]
-        public void CreateOptionHandler_WhenHandlerIsNotRegistered_ThenError()
-        {
-            SetupHandlers();
-            SetupOptionHandlers(CreateOptionHandler<Option1>(), CreateOptionHandler<Option3>());
-
-            var sut = CreateSut();
-
-            this.Invoking(s => sut.CreateOptionHandler(new Option2()))
                 .Should().Throw<System.InvalidOperationException>();
         }
 
@@ -113,21 +71,6 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
         }
 
         private class Action3 : Action
-        {
-
-        }
-
-        private class Option1 : Option
-        {
-
-        }
-
-        private class Option2 : Option
-        {
-
-        }
-
-        private class Option3 : Option
         {
 
         }
