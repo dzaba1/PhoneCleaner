@@ -4,6 +4,7 @@ using Dzaba.PhoneCleaner.Serilog;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog.Events;
 using System;
+using System.IO;
 
 namespace Dzaba.PhoneCleaner
 {
@@ -39,8 +40,12 @@ namespace Dzaba.PhoneCleaner
                 services.RegisterPhoneCleanerLib();
                 services.RegisterMtpMediaDevices();
 
+                var logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PhoneCleaner.log");
+
                 var loggerConfig = Extensions.GetLoggerConfiguration();
-                loggerConfig.AddConsole(LogEventLevel.Information);
+                loggerConfig
+                    .AddConsole(LogEventLevel.Information)
+                    .AddFile(logPath, LogEventLevel.Debug);
                 services.RegisterSerilog(loggerConfig.CreateLogger());
 
                 services.AddTransient<IApp, App>();

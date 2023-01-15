@@ -31,5 +31,13 @@ namespace Dzaba.PhoneCleaner.Serilog
             return loggerConfiguration
                 .WriteTo.Console(level, Format);
         }
+
+        public static LoggerConfiguration AddFile(this LoggerConfiguration loggerConfiguration, string path, LogEventLevel level = LogEventLevel.Debug)
+        {
+            Require.NotNull(loggerConfiguration, nameof(loggerConfiguration));
+
+            return loggerConfiguration
+                .WriteTo.File(path, level, fileSizeLimitBytes: 15728640, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true, retainedFileCountLimit: 10);
+        }
     }
 }
