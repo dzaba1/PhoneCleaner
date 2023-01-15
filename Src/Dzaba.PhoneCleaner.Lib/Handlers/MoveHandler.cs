@@ -1,6 +1,5 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Config;
 using Dzaba.PhoneCleaner.Lib.Device;
-using Dzaba.PhoneCleaner.Lib.Handlers.Options;
 using Dzaba.PhoneCleaner.Utils;
 using Microsoft.Extensions.Logging;
 using System.IO;
@@ -10,19 +9,15 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
     internal sealed class MoveHandler : HandlerBase<Move>
     {
         private readonly ILogger<CopyHandler> logger;
-        private readonly IOptionsEvaluator optionsEvaluator;
         private readonly IIOHelper ioHelper;
 
         public MoveHandler(ILogger<CopyHandler> logger,
-            IOptionsEvaluator optionsEvaluator,
             IIOHelper ioHelper)
         {
             Require.NotNull(logger, nameof(logger));
-            Require.NotNull(optionsEvaluator, nameof(optionsEvaluator));
             Require.NotNull(ioHelper, nameof(ioHelper));
 
             this.logger = logger;
-            this.optionsEvaluator = optionsEvaluator;
             this.ioHelper = ioHelper;
         }
 
@@ -48,12 +43,12 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
 
             var pathInfo = deviceConnection.GetDirectoryInfo(path);
 
-            return 0;
+            return MoveDirectory(deviceConnection, pathInfo, fullDest, model);
         }
 
         private int MoveDirectory(IDeviceConnection deviceConnection,
             IDeviceDirectoryInfo sourceDir, string destinationDir,
-            Copy model)
+            Move model)
         {
             if (!Directory.Exists(destinationDir))
             {
