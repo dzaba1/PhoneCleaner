@@ -16,10 +16,8 @@ namespace Dzaba.PhoneCleaner.Lib.Config
             Require.NotWhiteSpace(filepath, nameof(filepath));
 
             var serlializer = new XmlSerializer(typeof(Config));
-            using (var fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                return (Config)serlializer.Deserialize(fs);
-            }
+            using var fs = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            return (Config)serlializer.Deserialize(fs);
         }
     }
 }

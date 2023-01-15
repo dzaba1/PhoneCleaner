@@ -1,13 +1,14 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Device;
 using Dzaba.PhoneCleaner.Utils;
+using System;
 
 namespace Dzaba.PhoneCleaner.Lib.Tests.Integration.Device
 {
     internal sealed class DeviceConnectionFactory : IDeviceConnectionFactory
     {
-        private readonly IRootDirProvider rootDirProvider;
+        private readonly Func<string> rootDirProvider;
 
-        public DeviceConnectionFactory(IRootDirProvider rootDirProvider)
+        public DeviceConnectionFactory(Func<string> rootDirProvider)
         {
             Require.NotNull(rootDirProvider, nameof(rootDirProvider));
 
@@ -16,7 +17,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Integration.Device
 
         public IDeviceConnection Create(string deviceName, bool testOnly)
         {
-            return new TempPathDevice(rootDirProvider.GetRootDir());
+            return new TempPathDevice(rootDirProvider());
         }
     }
 }

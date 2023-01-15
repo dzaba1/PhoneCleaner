@@ -19,10 +19,8 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Integration.Device
 
         public void CopyFile(string source, Stream dest)
         {
-            using (var fs = new FileStream(source, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                fs.CopyTo(dest);
-            }
+            using var fs = new FileStream(source, FileMode.Open, FileAccess.Read, FileShare.Read);
+            fs.CopyTo(dest);
         }
 
         public void DeleteDirectory(string path, bool recursive)

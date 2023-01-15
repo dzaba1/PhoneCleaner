@@ -23,8 +23,6 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Integration
             loggerConfig.AddConsole();
             services.RegisterSerilog(loggerConfig.CreateLogger());
 
-            services.AddTransient<IDeviceConnectionFactory, DeviceConnectionFactory>();
-
             OnSetupContainer(services);
 
             serviceProvider = services.BuildServiceProvider();

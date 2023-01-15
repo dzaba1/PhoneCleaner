@@ -1,4 +1,5 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Config;
+using Dzaba.PhoneCleaner.Lib.Device;
 using Dzaba.PhoneCleaner.Lib.Tests.Integration.Device;
 using Dzaba.PhoneCleaner.Utils;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,7 +36,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Integration.Handlers
 
         protected override void OnSetupContainer(IServiceCollection services)
         {
-            services.AddSingleton<IRootDirProvider>(new RootDirProvider(() => DeviceRootDir));
+            services.AddSingleton<IDeviceConnectionFactory>(new DeviceConnectionFactory(() => DeviceRootDir));
         }
 
         protected CleanData GetCleanData()
