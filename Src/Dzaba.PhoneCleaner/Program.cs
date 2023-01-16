@@ -11,17 +11,15 @@ namespace Dzaba.PhoneCleaner
     internal static class Program
     {
         /// <summary>
-        /// Main function.
+        /// Mostly removes and copies files from a phone.
         /// </summary>
         /// <param name="workingDir">The main directory where all files will be copied from the device.</param>
         /// <param name="deviceName">The friendly name of the device.</param>
-        /// <param name="driveIndex">The ordinal index of the device storage.</param>
         /// <param name="configFilepath">The path to the confiuguration file.</param>
         /// <param name="testOnly">If set then any write operations like copy or delete won't be executed. Only log traces.</param>
         /// <returns></returns>
         public static int Main(string workingDir,
             string deviceName,
-            int driveIndex = 0,
             string configFilepath = "config.xml",
             bool testOnly = false)
         {
@@ -31,7 +29,6 @@ namespace Dzaba.PhoneCleaner
                 {
                     ConfigFilepath = configFilepath,
                     DeviceName = deviceName,
-                    DriveIndex = driveIndex,
                     WorkingDir = workingDir,
                     TestOnly = testOnly
                 };

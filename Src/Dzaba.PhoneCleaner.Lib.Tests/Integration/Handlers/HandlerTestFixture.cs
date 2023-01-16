@@ -43,7 +43,6 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Integration.Handlers
         {
             return new CleanData
             {
-                DriveIndex = 0,
                 WorkingDir = WorkingDir,
                 TestOnly = true,
                 DeviceName = "Test",

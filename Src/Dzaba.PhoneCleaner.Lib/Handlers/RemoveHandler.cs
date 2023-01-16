@@ -27,7 +27,7 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
             Require.NotNull(deviceConnection, nameof(deviceConnection));
             Require.NotNull(cleanData, nameof(cleanData));
 
-            var root = deviceConnection.GetRootOrThrow(cleanData.DriveIndex);
+            var root = deviceConnection.GetRootOrThrow(model.DriveIndex);
             var path = Path.Combine(root, model.Path);
 
             logger.LogInformation("Invoking the remove action for path '{Path}'. Recursive: {Recursive}",

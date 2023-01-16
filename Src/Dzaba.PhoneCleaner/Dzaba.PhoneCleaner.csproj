@@ -6,6 +6,7 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <OutputPath>..\..\bin\Cmd\$(Configuration)\</OutputPath>
+    <AssemblyName>PhoneCleaner</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
