@@ -106,7 +106,7 @@ namespace Dzaba.PhoneCleaner.Lib
 
         private void ClearTempCopy(string tempCopyFilepath)
         {
-            if (File.Exists(tempCopyFilepath))
+            if (!string.IsNullOrWhiteSpace(tempCopyFilepath) && File.Exists(tempCopyFilepath))
             {
                 File.Delete(tempCopyFilepath);
             }
