@@ -5,6 +5,7 @@ using Dzaba.PhoneCleaner.Lib.Handlers.Options;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
 {
@@ -24,22 +25,38 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             return fixture.Create<TakeHandler>();
         }
 
-        [TestCase(10, 10, false)]
-        [TestCase(10, 9, true)]
-        [TestCase(10, 11, false)]
-        public void IsOk_WhenNewerThanSpecified_ThenCorrectCheck(int modificationTimeDays, int newerThanDays, bool expected)
+        public static IEnumerable<TestCaseData> GetOlderThanData()
         {
-            var now = new DateTime(2020, 1, 1);
+            var now = new DateTime(2020, 1, 10);
+
+            yield return new TestCaseData(now, new DateTime(2018, 1, 10), TimeSpan.FromDays(14), true);
+            yield return new TestCaseData(now, new DateTime(2020, 1, 9), TimeSpan.FromDays(14), false);
+            yield return new TestCaseData(now, new DateTime(2020, 1, 9), TimeSpan.FromDays(1), false);
+            yield return new TestCaseData(now, new DateTime(2020, 1, 8), TimeSpan.FromDays(1), true);
+        }
+
+        public static IEnumerable<TestCaseData> GetNewerThanData()
+        {
+            var now = new DateTime(2020, 1, 10);
+
+            yield return new TestCaseData(now, new DateTime(2018, 1, 10), TimeSpan.FromDays(14), false);
+            yield return new TestCaseData(now, new DateTime(2020, 1, 9), TimeSpan.FromDays(14), true);
+            yield return new TestCaseData(now, new DateTime(2020, 1, 9), TimeSpan.FromDays(1), false);
+            yield return new TestCaseData(now, new DateTime(2020, 1, 9), TimeSpan.FromDays(2), true);
+        }
+
+        [TestCaseSource(nameof(GetNewerThanData))]
+        public void IsOk_WhenNewerThanSpecified_ThenCorrectCheck(DateTime now, DateTime modificationTime, TimeSpan newerThan, bool expected)
+        {
             fixture.FreezeMock<IDateTimeProvider>()
                 .Setup(x => x.Now())
                 .Returns(now);
 
-            var modificationTime = now.AddDays(-modificationTimeDays);
             var systemInfo = TestUtils.CreateSystemInfo<IDeviceSystemInfo>(modifiedTime: modificationTime);
 
             var take = new Take
             {
-                NewerThan = TimeSpan.FromDays(newerThanDays)
+                NewerThan = newerThan
             };
 
             var sut = CreateSut();
@@ -48,22 +65,18 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Handlers
             result.Should().Be(expected);
         }
 
-        [TestCase(10, 10, false)]
-        [TestCase(10, 9, false)]
-        [TestCase(10, 11, true)]
-        public void IsOk_WhenOlderThanSpecified_ThenCorrectCheck(int modificationTimeDays, int olderThanDays, bool expected)
+        [TestCaseSource(nameof(GetOlderThanData))]
+        public void IsOk_WhenOlderThanSpecified_ThenCorrectCheck(DateTime now, DateTime modificationTime, TimeSpan olderThan, bool expected)
         {
-            var now = new DateTime(2020, 1, 1);
             fixture.FreezeMock<IDateTimeProvider>()
                 .Setup(x => x.Now())
                 .Returns(now);
 
-            var modificationTime = now.AddDays(-modificationTimeDays);
             var systemInfo = TestUtils.CreateSystemInfo<IDeviceSystemInfo>(modifiedTime: modificationTime);
 
             var take = new Take
             {
-                OlderThan = TimeSpan.FromDays(olderThanDays)
+                OlderThan = olderThan
             };
 
             var sut = CreateSut();

@@ -56,6 +56,7 @@ namespace Dzaba.PhoneCleaner.Lib
                     case OnFileConflict.RaiseError:
                         throw new IOException($"The file '{currentTargetFilePath}' already exists.");
                     case OnFileConflict.DoNothing:
+                        logger.LogInformation("The file '{Path}' already exists. Skipping copy.", currentTargetFilePath);
                         return false;
                     case OnFileConflict.Overwrite:
                         overwrite = true;
