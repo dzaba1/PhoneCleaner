@@ -46,6 +46,7 @@ namespace Dzaba.PhoneCleaner.Lib
 
             var currentTargetFilePath = targetFilePath;
             var overwrite = false;
+            string tempCopyFilepath = null;
 
             if (File.Exists(currentTargetFilePath))
             {
@@ -58,6 +59,7 @@ namespace Dzaba.PhoneCleaner.Lib
                         return false;
                     case OnFileConflict.Overwrite:
                         overwrite = true;
+                        tempCopyFilepath = MakeTempCopy(currentTargetFilePath);
                         break;
                     case OnFileConflict.KeepBoth:
                         currentTargetFilePath = DeviceIOUtils.GetNewTargetFileName(currentTargetFilePath);
@@ -66,8 +68,71 @@ namespace Dzaba.PhoneCleaner.Lib
             }
 
             logger.LogInformation("Copy file '{Path}' to '{Destination}'.", file.FullName, currentTargetFilePath);
-            deviceConnection.CopyFile(file.FullName, currentTargetFilePath, overwrite);
-            return true;
+
+            try
+            {
+                deviceConnection.CopyFile(file.FullName, currentTargetFilePath, overwrite);
+                return true;
+            }
+            catch
+            {
+                RestoreOrCleanFile(currentTargetFilePath, tempCopyFilepath);
+                throw;
+            }
+            finally
+            {
+                ClearTempCopy(tempCopyFilepath);
+            }
+        }
+
+        private void RestoreOrCleanFile(string targetFilePath, string tempCopyFilepath)
+        {
+            if (File.Exists(targetFilePath))
+            {
+                File.Delete(targetFilePath);
+            }
+
+            if (!string.IsNullOrWhiteSpace(tempCopyFilepath))
+            {
+                using (var fsSource = new FileStream(tempCopyFilepath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    using (var fsTarget = new FileStream(targetFilePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        fsSource.CopyTo(fsTarget);
+                    }
+                }
+            }
+        }
+
+        private void ClearTempCopy(string tempCopyFilepath)
+        {
+            if (File.Exists(tempCopyFilepath))
+            {
+                File.Delete(tempCopyFilepath);
+            }
+        }
+
+        private string MakeTempCopy(string filepath)
+        {
+            var dir = Path.Combine(Path.GetTempPath(), "DzabaPhoneCleaner");
+            var filename = Path.GetFileName(filepath);
+
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+
+            var tempFilepath = Path.Combine(dir, filename);
+
+            using (var fsSource = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                using (var fsTarget = new FileStream(tempFilepath, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+                {
+                    fsSource.CopyTo(fsTarget);
+                }
+            }
+
+            return tempFilepath;
         }
 
         public IReadOnlyList<IDeviceFileInfo> EnumerateFiles(IDeviceConnection deviceConnection, IDeviceDirectoryInfo dir,
