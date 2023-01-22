@@ -11,13 +11,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dzaba.PhoneCleaner.Lib.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dzaba.PhoneCleaner.MtpMediaDevices", "Src\Dzaba.PhoneCleaner.MtpMediaDevices\Dzaba.PhoneCleaner.MtpMediaDevices.csproj", "{38BA13A6-181C-4859-A758-9C681612A952}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dzaba.PhoneCleaner.Serilog", "Src\Dzaba.PhoneCleaner.Serilog\Dzaba.PhoneCleaner.Serilog.csproj", "{3E68F3E1-B231-46B0-A97E-FEA40E532754}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dzaba.PhoneCleaner.Serilog", "Src\Dzaba.PhoneCleaner.Serilog\Dzaba.PhoneCleaner.Serilog.csproj", "{3E68F3E1-B231-46B0-A97E-FEA40E532754}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dzaba.PhoneCleaner.Utils", "Src\Dzaba.PhoneCleaner.Utils\Dzaba.PhoneCleaner.Utils.csproj", "{29E4DB56-FCCF-42CD-A69C-C37CED999100}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dzaba.PhoneCleaner.Utils", "Src\Dzaba.PhoneCleaner.Utils\Dzaba.PhoneCleaner.Utils.csproj", "{29E4DB56-FCCF-42CD-A69C-C37CED999100}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AE6FDAF9-862B-43F0-98A3-0CECE607C193}"
 	ProjectSection(SolutionItems) = preProject
+		moj.xml = moj.xml
 		README.md = README.md
+		zona.xml = zona.xml
 	EndProjectSection
 EndProject
 Global

@@ -1,0 +1,22 @@
+<Config>
+  <Move Path="DCIM\Camera" Destination="Zdjecia" Recursive="false" OnConflict="DoNothing">
+    <Take OlderThan="14.00:00:00" ItemType="File" />
+    <Regex Pattern=".*\.((jpg)|(mp4)|(jpeg))$" RegexOptions="IgnoreCase" ItemType="File" />
+  </Move>
+  <Move Path="Android\media\com.whatsapp\WhatsApp\Media\WhatsApp Images" Destination="WhatsApp\Pobrane" Recursive="false" OnConflict="DoNothing">
+    <Take OlderThan="14.00:00:00" ItemType="File" />
+    <Regex Pattern=".*\.((jpg)|(mp4)|(jpeg))$" RegexOptions="IgnoreCase" ItemType="File" />
+  </Move>
+  <Move Path="Android\media\com.whatsapp\WhatsApp\Media\WhatsApp Images\Sent" Destination="WhatsApp\Wyslane" Recursive="false" OnConflict="DoNothing">
+    <Take OlderThan="14.00:00:00" ItemType="File" />
+    <Regex Pattern=".*\.((jpg)|(mp4)|(jpeg))$" RegexOptions="IgnoreCase" ItemType="File" />
+  </Move>
+  <Move Path="Android\media\com.whatsapp\WhatsApp\Media\WhatsApp Video" Destination="WhatsApp\Pobrane" Recursive="false" OnConflict="DoNothing">
+    <Take OlderThan="14.00:00:00" ItemType="File" />
+    <Regex Pattern=".*\.((jpg)|(mp4)|(jpeg))$" RegexOptions="IgnoreCase" ItemType="File" />
+  </Move>
+  <Move Path="Android\media\com.whatsapp\WhatsApp\Media\WhatsApp Video\Sent" Destination="WhatsApp\Wyslane" Recursive="false" OnConflict="DoNothing">
+    <Take OlderThan="14.00:00:00" ItemType="File" />
+    <Regex Pattern=".*\.((jpg)|(mp4)|(jpeg))$" RegexOptions="IgnoreCase" ItemType="File" />
+  </Move>
+</Config>

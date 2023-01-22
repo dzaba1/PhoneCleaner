@@ -19,6 +19,7 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
             ILogger<DeviceConnection> logger,
             bool testOnly)
         {
+            Require.NotWhiteSpace(friendlyName, nameof(friendlyName));
             Require.NotNull(logger, nameof(logger));
 
             this.logger = logger;
@@ -33,10 +34,11 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
             }
 
             logger.LogInformation("Connecting to '{DeviceName}'", friendlyName);
+            FriendlyName = friendlyName;
             mediaDevice.Connect();
         }
 
-        public string FriendlyName => mediaDevice.FriendlyName;
+        public string FriendlyName { get; }
 
         public void CopyFile(string source, Stream dest)
         {
