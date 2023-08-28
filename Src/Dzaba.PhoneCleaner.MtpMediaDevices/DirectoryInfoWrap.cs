@@ -1,13 +1,15 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Device;
 using MediaDevices;
+using System;
 using System.Linq;
 
 namespace Dzaba.PhoneCleaner.MtpMediaDevices
 {
     internal sealed class DirectoryInfoWrap : FileSystemInfoWrap<MediaDirectoryInfo>, IDeviceDirectoryInfo
     {
-        public DirectoryInfoWrap(MediaDirectoryInfo info)
-            : base(info)
+        public DirectoryInfoWrap(string path,
+            Func<string, MediaDirectoryInfo> dirProvider)
+            : base(path, dirProvider)
         {
 
         }

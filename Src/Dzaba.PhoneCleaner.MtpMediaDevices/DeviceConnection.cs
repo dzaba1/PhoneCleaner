@@ -122,24 +122,30 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
             return mediaDevice.FileExists(path);
         }
 
+        private MediaDirectoryInfo GetMediaDirectoryInfo(string path)
+        {
+            logger.LogInformation("Getting directory info '{DeviceName}' '{Path}'.", FriendlyName, path);
+            return mediaDevice.GetDirectoryInfo(path);
+        }
+
         public IDeviceDirectoryInfo GetDirectoryInfo(string path)
         {
             Require.NotWhiteSpace(path, nameof(path));
 
-            logger.LogInformation("Getting directory info '{DeviceName}' '{Path}'.", FriendlyName, path);
+            return new DirectoryInfoWrap(path, GetMediaDirectoryInfo);
+        }
 
-            var dirInfo = mediaDevice.GetDirectoryInfo(path);
-            return new DirectoryInfoWrap(dirInfo);
+        private MediaFileInfo GetMediaFileInfo(string path)
+        {
+            logger.LogInformation("Getting file info '{DeviceName}' '{Path}'.", FriendlyName, path);
+            return mediaDevice.GetFileInfo(path);
         }
 
         public IDeviceFileInfo GetFileInfo(string path)
         {
             Require.NotWhiteSpace(path, nameof(path));
 
-            logger.LogInformation("Getting file info '{DeviceName}' '{Path}'.", FriendlyName, path);
-
-            var fileInfo = mediaDevice.GetFileInfo(path);
-            return new FileInfoWrap(fileInfo);
+            return new FileInfoWrap(path, GetMediaFileInfo);
         }
     }
 }
