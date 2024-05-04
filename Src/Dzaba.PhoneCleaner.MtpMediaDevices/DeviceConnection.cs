@@ -10,7 +10,7 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
 {
     internal sealed class DeviceConnection : IDeviceConnection
     {
-        private readonly MediaDevice mediaDevice;
+        private MediaDevice mediaDevice;
         private readonly ILogger<DeviceConnection> logger;
         private readonly bool testOnly;
 
@@ -24,16 +24,21 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
             this.logger = logger;
             this.testOnly = testOnly;
 
+            FriendlyName = friendlyName;
+            Connect();
+        }
+
+        private void Connect()
+        {
             mediaDevice = MediaDevice.GetDevices()
-                .FirstOrDefault(x => x.FriendlyName == friendlyName);
+                .FirstOrDefault(x => x.FriendlyName == FriendlyName);
 
             if (mediaDevice == null)
             {
-                throw new InvalidOperationException($"Could't find any devices with name '{friendlyName}'.");
+                throw new InvalidOperationException($"Could't find any devices with name '{FriendlyName}'.");
             }
 
-            logger.LogInformation("Connecting to '{DeviceName}'", friendlyName);
-            FriendlyName = friendlyName;
+            logger.LogInformation("Connecting to '{DeviceName}'", FriendlyName);
             mediaDevice.Connect();
         }
 
@@ -87,6 +92,7 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
         {
             logger.LogInformation("Disposing '{DeviceName}'", FriendlyName);
             mediaDevice?.Dispose();
+            mediaDevice = null;
         }
 
         public IEnumerable<string> EnumerableDrives()
@@ -145,6 +151,16 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
             ArgumentException.ThrowIfNullOrWhiteSpace(path, nameof(path));
 
             return new FileInfoWrap(path, GetMediaFileInfo);
+        }
+
+        public void Reconnect()
+        {
+            if (mediaDevice != null)
+            {
+                Dispose();
+            }
+
+            Connect();
         }
     }
 }

@@ -16,5 +16,6 @@ namespace Dzaba.PhoneCleaner.Lib.Device
         bool FileExists(string path);
         IDeviceFileInfo GetFileInfo(string path);
         IDeviceDirectoryInfo GetDirectoryInfo(string path);
+        void Reconnect();
     }
 }

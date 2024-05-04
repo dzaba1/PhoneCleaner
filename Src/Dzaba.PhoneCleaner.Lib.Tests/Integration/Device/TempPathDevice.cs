@@ -76,5 +76,10 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Integration.Device
             var info = new FileInfo(path);
             return new FileInfoWrap(info);
         }
+
+        public void Reconnect()
+        {
+            
+        }
     }
 }
