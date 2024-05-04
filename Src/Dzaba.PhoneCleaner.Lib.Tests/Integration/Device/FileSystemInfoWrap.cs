@@ -1,5 +1,4 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Device;
-using Dzaba.PhoneCleaner.Utils;
 using System;
 using System.IO;
 
@@ -10,7 +9,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Integration.Device
     {
         public FileSystemInfoWrap(T info)
         {
-            Require.NotNull(info, nameof(info));
+            ArgumentNullException.ThrowIfNull(info, nameof(info));
 
             Info = info;
         }

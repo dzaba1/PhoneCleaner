@@ -1,7 +1,6 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Config;
 using Dzaba.PhoneCleaner.Lib.Device;
 using Dzaba.PhoneCleaner.Lib.Handlers;
-using Dzaba.PhoneCleaner.Utils;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
@@ -25,10 +24,10 @@ namespace Dzaba.PhoneCleaner.Lib
             IHandlerFactory handlerFactory,
             ILogger<Cleaner> logger)
         {
-            Require.NotNull(configReader, nameof(configReader));
-            Require.NotNull(deviceConnectionFactory, nameof(deviceConnectionFactory));
-            Require.NotNull(handlerFactory, nameof(handlerFactory));
-            Require.NotNull(logger, nameof(logger));
+            ArgumentNullException.ThrowIfNull(configReader, nameof(configReader));
+            ArgumentNullException.ThrowIfNull(deviceConnectionFactory, nameof(deviceConnectionFactory));
+            ArgumentNullException.ThrowIfNull(handlerFactory, nameof(handlerFactory));
+            ArgumentNullException.ThrowIfNull(logger, nameof(logger));
 
             this.configReader = configReader;
             this.deviceConnectionFactory = deviceConnectionFactory;
@@ -38,7 +37,7 @@ namespace Dzaba.PhoneCleaner.Lib
 
         public int Clean(CleanData cleanData)
         {
-            Require.NotNull(cleanData, nameof(cleanData));
+            ArgumentNullException.ThrowIfNull(cleanData, nameof(cleanData));
 
             var config = configReader.Read(cleanData.ConfigFilepath);
 

@@ -1,8 +1,8 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Config;
 using Dzaba.PhoneCleaner.Lib.Handlers;
 using Dzaba.PhoneCleaner.Lib.Handlers.Options;
-using Dzaba.PhoneCleaner.Utils;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Dzaba.PhoneCleaner.Lib
 {
@@ -10,7 +10,7 @@ namespace Dzaba.PhoneCleaner.Lib
     {
         public static void RegisterPhoneCleanerLib(this IServiceCollection services)
         {
-            Require.NotNull(services, nameof(services));
+            ArgumentNullException.ThrowIfNull(services, nameof(services));
 
             services.AddTransient<ICleaner, Cleaner>();
             services.AddTransient<IDateTimeProvider, DateTimeProvider>();

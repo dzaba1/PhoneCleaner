@@ -1,6 +1,6 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Device;
-using Dzaba.PhoneCleaner.Utils;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace Dzaba.PhoneCleaner.MtpMediaDevices
 {
@@ -10,14 +10,14 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
 
         public DeviceConnectionFactory(ILoggerFactory loggerFactory)
         {
-            Require.NotNull(loggerFactory, nameof(loggerFactory));
+            ArgumentNullException.ThrowIfNull(loggerFactory, nameof(loggerFactory));
 
             this.loggerFactory = loggerFactory;
         }
 
         public IDeviceConnection Create(string deviceName, bool testOnly)
         {
-            Require.NotWhiteSpace(deviceName, nameof(deviceName));
+            ArgumentException.ThrowIfNullOrWhiteSpace(deviceName, nameof(deviceName));
 
             return new DeviceConnection(deviceName, loggerFactory.CreateLogger<DeviceConnection>(), testOnly);
         }

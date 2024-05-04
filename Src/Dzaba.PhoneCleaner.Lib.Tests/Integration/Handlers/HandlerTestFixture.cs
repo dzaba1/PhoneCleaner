@@ -1,9 +1,8 @@
-﻿using Dzaba.PhoneCleaner.Lib.Config;
-using Dzaba.PhoneCleaner.Lib.Device;
+﻿using Dzaba.PhoneCleaner.Lib.Device;
 using Dzaba.PhoneCleaner.Lib.Tests.Integration.Device;
-using Dzaba.PhoneCleaner.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using System;
 using System.IO;
 using System.Xml.Serialization;
 
@@ -80,13 +79,13 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Integration.Handlers
         }
 
         protected void MakeConfig<T>(T model)
-            where T : Action
+            where T : Config.Action
         {
-            Require.NotNull(model, nameof(model));
+            ArgumentNullException.ThrowIfNull(model, nameof(model));
 
             var config = new Config.Config
             {
-                Actions = new Action[]
+                Actions = new Config.Action[]
                 {
                     model
                 }

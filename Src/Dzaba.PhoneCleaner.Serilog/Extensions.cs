@@ -1,7 +1,7 @@
-﻿using Dzaba.PhoneCleaner.Utils;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
+using System;
 
 namespace Dzaba.PhoneCleaner.Serilog
 {
@@ -11,8 +11,8 @@ namespace Dzaba.PhoneCleaner.Serilog
 
         public static void RegisterSerilog(this IServiceCollection services, ILogger logger)
         {
-            Require.NotNull(services, nameof(services));
-            Require.NotNull(logger, nameof(logger));
+            ArgumentNullException.ThrowIfNull(services, nameof(services));
+            ArgumentNullException.ThrowIfNull(logger, nameof(logger));
 
             services.AddLogging(c => c.AddSerilog(logger, true));
         }
@@ -26,7 +26,7 @@ namespace Dzaba.PhoneCleaner.Serilog
 
         public static LoggerConfiguration AddConsole(this LoggerConfiguration loggerConfiguration, LogEventLevel level = LogEventLevel.Debug)
         {
-            Require.NotNull(loggerConfiguration, nameof(loggerConfiguration));
+            ArgumentNullException.ThrowIfNull(loggerConfiguration, nameof(loggerConfiguration));
 
             return loggerConfiguration
                 .WriteTo.Console(level, Format);
@@ -34,7 +34,7 @@ namespace Dzaba.PhoneCleaner.Serilog
 
         public static LoggerConfiguration AddFile(this LoggerConfiguration loggerConfiguration, string path, LogEventLevel level = LogEventLevel.Debug)
         {
-            Require.NotNull(loggerConfiguration, nameof(loggerConfiguration));
+            ArgumentNullException.ThrowIfNull(loggerConfiguration, nameof(loggerConfiguration));
 
             return loggerConfiguration
                 .WriteTo.File(path, level, fileSizeLimitBytes: 15728640, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true, retainedFileCountLimit: 10);

@@ -1,5 +1,4 @@
-﻿using Dzaba.PhoneCleaner.Utils;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 
@@ -9,7 +8,7 @@ namespace Dzaba.PhoneCleaner.Lib.Device
     {
         public static string GetRootOrThrow(this IDeviceConnection deviceConnection, int driveIndex)
         {
-            Require.NotNull(deviceConnection, nameof(deviceConnection));
+            ArgumentNullException.ThrowIfNull(deviceConnection, nameof(deviceConnection));
 
             var root = deviceConnection.EnumerableDrives().ElementAtOrDefault(driveIndex);
             if (string.IsNullOrWhiteSpace(root))
@@ -22,9 +21,9 @@ namespace Dzaba.PhoneCleaner.Lib.Device
 
         public static void CopyFile(this IDeviceConnection deviceConnection, string source, string dest, bool overwrite)
         {
-            Require.NotNull(deviceConnection, nameof(deviceConnection));
-            Require.NotWhiteSpace(source, nameof(source));
-            Require.NotWhiteSpace(dest, nameof(dest));
+            ArgumentNullException.ThrowIfNull(deviceConnection, nameof(deviceConnection));
+            ArgumentException.ThrowIfNullOrWhiteSpace(source, nameof(source));
+            ArgumentException.ThrowIfNullOrWhiteSpace(dest, nameof(dest));
 
             var mode = overwrite ? FileMode.Create : FileMode.CreateNew;
 

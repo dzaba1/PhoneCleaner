@@ -1,7 +1,7 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Config.Options;
 using Dzaba.PhoneCleaner.Lib.Device;
-using Dzaba.PhoneCleaner.Utils;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace Dzaba.PhoneCleaner.Lib.Handlers.Options
 {
@@ -11,15 +11,15 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers.Options
 
         public RegexHandler(ILogger<RegexHandler> logger)
         {
-            Require.NotNull(logger, nameof(logger));
+            ArgumentNullException.ThrowIfNull(logger, nameof(logger));
 
             this.logger = logger;
         }
 
         protected override bool IsOk(Regex model, IDeviceConnection deviceConnection, IDeviceSystemInfo systemInfo)
         {
-            Require.NotNull(model, nameof(model));
-            Require.NotNull(systemInfo, nameof(systemInfo));
+            ArgumentNullException.ThrowIfNull(model, nameof(model));
+            ArgumentNullException.ThrowIfNull(systemInfo, nameof(systemInfo));
 
             if (string.IsNullOrWhiteSpace(model.Pattern))
             {

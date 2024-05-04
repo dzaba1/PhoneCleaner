@@ -1,5 +1,4 @@
-﻿using Dzaba.PhoneCleaner.Utils;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,8 +18,8 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
         public HandlerFactory(IEnumerable<IHandler> handlers,
             ILogger<HandlerFactory> logger)
         {
-            Require.NotNull(handlers, nameof(handlers));
-            Require.NotNull(logger, nameof(logger));
+            ArgumentNullException.ThrowIfNull(handlers, nameof(handlers));
+            ArgumentNullException.ThrowIfNull(logger, nameof(logger));
 
             this.handlers = handlers.ToDictionary(h => h.ModelType);
             this.logger = logger;
@@ -28,7 +27,7 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
 
         public IHandler CreateHandler(Config.Action model)
         {
-            Require.NotNull(model, nameof(model));
+            ArgumentNullException.ThrowIfNull(model, nameof(model));
 
             var type = model.GetType();
 

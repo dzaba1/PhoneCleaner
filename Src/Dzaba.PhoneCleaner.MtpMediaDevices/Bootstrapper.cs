@@ -1,6 +1,6 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Device;
-using Dzaba.PhoneCleaner.Utils;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Dzaba.PhoneCleaner.MtpMediaDevices
 {
@@ -8,7 +8,7 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
     {
         public static void RegisterMtpMediaDevices(this IServiceCollection services)
         {
-            Require.NotNull(services, nameof(services));
+            ArgumentNullException.ThrowIfNull(services, nameof(services));
 
             services.AddTransient<IDeviceConnectionFactory, DeviceConnectionFactory>();
         }

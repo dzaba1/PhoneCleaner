@@ -1,7 +1,6 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Device;
 using System;
 using MediaDevices;
-using Dzaba.PhoneCleaner.Utils;
 
 namespace Dzaba.PhoneCleaner.MtpMediaDevices
 {
@@ -13,8 +12,8 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
         public FileSystemInfoWrap(string path,
             Func<string, T> fileInfoProvider)
         {
-            Require.NotNull(fileInfoProvider, nameof(fileInfoProvider));
-            Require.NotWhiteSpace(path, nameof(path));
+            ArgumentNullException.ThrowIfNull(fileInfoProvider, nameof(fileInfoProvider));
+            ArgumentException.ThrowIfNullOrWhiteSpace(path, nameof(path));
 
             info = new Lazy<T>(() => fileInfoProvider(path));
             FullName = path;

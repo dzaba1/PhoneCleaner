@@ -1,6 +1,6 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Config.Options;
 using Dzaba.PhoneCleaner.Lib.Device;
-using Dzaba.PhoneCleaner.Utils;
+using System;
 
 namespace Dzaba.PhoneCleaner.Lib.Handlers.Options
 {
@@ -10,15 +10,15 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers.Options
 
         public SkipHandler(IDateTimeProvider dateTimeProvider)
         {
-            Require.NotNull(dateTimeProvider, nameof(dateTimeProvider));
+            ArgumentNullException.ThrowIfNull(dateTimeProvider, nameof(dateTimeProvider));
 
             this.dateTimeProvider = dateTimeProvider;
         }
 
         protected override bool IsOk(Skip model, IDeviceConnection deviceConnection, IDeviceSystemInfo systemInfo)
         {
-            Require.NotNull(model, nameof(model));
-            Require.NotNull(systemInfo, nameof(systemInfo));
+            ArgumentNullException.ThrowIfNull(model, nameof(model));
+            ArgumentNullException.ThrowIfNull(systemInfo, nameof(systemInfo));
 
             if (systemInfo.ModificationTime.HasValue)
             {

@@ -1,4 +1,4 @@
-﻿using Dzaba.PhoneCleaner.Utils;
+﻿using System;
 using System.IO;
 using System.Linq;
 
@@ -8,7 +8,7 @@ namespace Dzaba.PhoneCleaner.Lib
     {
         public static string GetFileOrDirectoryName(string path)
         {
-            Require.NotWhiteSpace(path, nameof(path));
+            ArgumentException.ThrowIfNullOrWhiteSpace(path, nameof(path));
 
             var split = path.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
                 .Select(p => p.Trim())
@@ -18,7 +18,7 @@ namespace Dzaba.PhoneCleaner.Lib
 
         public static string GetNewTargetFileName(string targetFilePath)
         {
-            Require.NotWhiteSpace(targetFilePath, nameof(targetFilePath));
+            ArgumentException.ThrowIfNullOrWhiteSpace(targetFilePath, nameof(targetFilePath));
 
             var fileInfo = new FileInfo(targetFilePath);
             var nameWithoutExt = Path.GetFileNameWithoutExtension(targetFilePath);

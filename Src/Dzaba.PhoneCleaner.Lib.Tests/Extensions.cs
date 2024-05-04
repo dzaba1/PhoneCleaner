@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
-using Dzaba.PhoneCleaner.Utils;
 using Moq;
+using System;
 
 namespace Dzaba.PhoneCleaner.Lib.Tests
 {
@@ -9,7 +9,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests
         public static Mock<T> FreezeMock<T>(this IFixture fixture)
                     where T : class
         {
-            Require.NotNull(fixture, nameof(fixture));
+            ArgumentNullException.ThrowIfNull(fixture, nameof(fixture));
 
             return fixture.Freeze<Mock<T>>();
         }

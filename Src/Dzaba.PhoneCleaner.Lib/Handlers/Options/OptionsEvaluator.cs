@@ -1,7 +1,7 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Config.Options;
 using Dzaba.PhoneCleaner.Lib.Device;
-using Dzaba.PhoneCleaner.Utils;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,8 +20,8 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers.Options
         public OptionsEvaluator(IOptionHandlerFactory handlerFactory,
             ILogger<OptionsEvaluator> logger)
         {
-            Require.NotNull(handlerFactory, nameof(handlerFactory));
-            Require.NotNull(logger, nameof(logger));
+            ArgumentNullException.ThrowIfNull(handlerFactory, nameof(handlerFactory));
+            ArgumentNullException.ThrowIfNull(logger, nameof(logger));
 
             this.handlerFactory = handlerFactory;
             this.logger = logger;

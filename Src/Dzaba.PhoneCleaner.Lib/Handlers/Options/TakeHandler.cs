@@ -1,7 +1,7 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Config.Options;
 using Dzaba.PhoneCleaner.Lib.Device;
-using Dzaba.PhoneCleaner.Utils;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace Dzaba.PhoneCleaner.Lib.Handlers.Options
 {
@@ -13,8 +13,8 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers.Options
         public TakeHandler(IDateTimeProvider dateTimeProvider,
             ILogger<TakeHandler> logger)
         {
-            Require.NotNull(dateTimeProvider, nameof(dateTimeProvider));
-            Require.NotNull(logger, nameof(logger));
+            ArgumentNullException.ThrowIfNull(dateTimeProvider, nameof(dateTimeProvider));
+            ArgumentNullException.ThrowIfNull(logger, nameof(logger));
 
             this.dateTimeProvider = dateTimeProvider;
             this.logger = logger;
@@ -22,8 +22,8 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers.Options
 
         protected override bool IsOk(Take model, IDeviceConnection deviceConnection, IDeviceSystemInfo systemInfo)
         {
-            Require.NotNull(model, nameof(model));
-            Require.NotNull(systemInfo, nameof(systemInfo));
+            ArgumentNullException.ThrowIfNull(model, nameof(model));
+            ArgumentNullException.ThrowIfNull(systemInfo, nameof(systemInfo));
 
             if (systemInfo.ModificationTime.HasValue)
             {

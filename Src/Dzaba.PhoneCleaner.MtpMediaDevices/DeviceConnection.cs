@@ -1,5 +1,4 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Device;
-using Dzaba.PhoneCleaner.Utils;
 using MediaDevices;
 using Microsoft.Extensions.Logging;
 using System;
@@ -19,8 +18,8 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
             ILogger<DeviceConnection> logger,
             bool testOnly)
         {
-            Require.NotWhiteSpace(friendlyName, nameof(friendlyName));
-            Require.NotNull(logger, nameof(logger));
+            ArgumentException.ThrowIfNullOrWhiteSpace(friendlyName, nameof(friendlyName));
+            ArgumentNullException.ThrowIfNull(logger, nameof(logger));
 
             this.logger = logger;
             this.testOnly = testOnly;
@@ -42,8 +41,8 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
 
         public void CopyFile(string source, Stream dest)
         {
-            Require.NotWhiteSpace(source, nameof(source));
-            Require.NotNull(dest, nameof(dest));
+            ArgumentException.ThrowIfNullOrWhiteSpace(source, nameof(source));
+            ArgumentNullException.ThrowIfNull(dest, nameof(dest));
 
             logger.LogInformation("Copy file from '{DeviceName}' '{Path}' to destination stream.", FriendlyName, source);
 
@@ -55,7 +54,7 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
 
         public void DeleteDirectory(string path, bool recursive)
         {
-            Require.NotWhiteSpace(path, nameof(path));
+            ArgumentException.ThrowIfNullOrWhiteSpace(path, nameof(path));
 
             logger.LogInformation("Deleting directory at '{DeviceName}' '{Path}'. Recursive: {Recursive}.", FriendlyName, path, recursive);
 
@@ -67,7 +66,7 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
 
         public void DeleteFile(string path)
         {
-            Require.NotWhiteSpace(path, nameof(path));
+            ArgumentException.ThrowIfNullOrWhiteSpace(path, nameof(path));
 
             logger.LogInformation("Deleting file at '{DeviceName}' '{Path}'.", FriendlyName, path);
 
@@ -79,7 +78,7 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
 
         public bool DirectoryExists(string path)
         {
-            Require.NotWhiteSpace(path, nameof(path));
+            ArgumentException.ThrowIfNullOrWhiteSpace(path, nameof(path));
 
             return mediaDevice.DirectoryExists(path);
         }
@@ -99,7 +98,7 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
 
         public IEnumerable<IDeviceDirectoryInfo> EnumerateDirectories(string path, SearchOption searchOption)
         {
-            Require.NotWhiteSpace(path, nameof(path));
+            ArgumentException.ThrowIfNullOrWhiteSpace(path, nameof(path));
 
             logger.LogInformation("Getting all directories from '{DeviceName}' '{Path}'. Search options: {SearchOption}.", FriendlyName, path, searchOption);
             return mediaDevice.EnumerateDirectories(path, "*", searchOption)
@@ -108,7 +107,7 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
 
         public IEnumerable<IDeviceFileInfo> EnumerateFiles(string path, SearchOption searchOption)
         {
-            Require.NotWhiteSpace(path, nameof(path));
+            ArgumentException.ThrowIfNullOrWhiteSpace(path, nameof(path));
 
             logger.LogInformation("Getting all files from '{DeviceName}' '{Path}'. Search options: {SearchOption}.", FriendlyName, path, searchOption);
             return mediaDevice.EnumerateFiles(path, "*.*", searchOption)
@@ -117,7 +116,7 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
 
         public bool FileExists(string path)
         {
-            Require.NotWhiteSpace(path, nameof(path));
+            ArgumentException.ThrowIfNullOrWhiteSpace(path, nameof(path));
 
             return mediaDevice.FileExists(path);
         }
@@ -130,7 +129,7 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
 
         public IDeviceDirectoryInfo GetDirectoryInfo(string path)
         {
-            Require.NotWhiteSpace(path, nameof(path));
+            ArgumentException.ThrowIfNullOrWhiteSpace(path, nameof(path));
 
             return new DirectoryInfoWrap(path, GetMediaDirectoryInfo);
         }
@@ -143,7 +142,7 @@ namespace Dzaba.PhoneCleaner.MtpMediaDevices
 
         public IDeviceFileInfo GetFileInfo(string path)
         {
-            Require.NotWhiteSpace(path, nameof(path));
+            ArgumentException.ThrowIfNullOrWhiteSpace(path, nameof(path));
 
             return new FileInfoWrap(path, GetMediaFileInfo);
         }

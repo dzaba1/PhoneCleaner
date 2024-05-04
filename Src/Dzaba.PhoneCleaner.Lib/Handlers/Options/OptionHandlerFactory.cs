@@ -1,5 +1,4 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Config.Options;
-using Dzaba.PhoneCleaner.Utils;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -20,8 +19,8 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers.Options
         public OptionHandlerFactory(IEnumerable<IOptionHandler> optionsHandlers,
             ILogger<OptionHandlerFactory> logger)
         {
-            Require.NotNull(optionsHandlers, nameof(optionsHandlers));
-            Require.NotNull(logger, nameof(logger));
+            ArgumentNullException.ThrowIfNull(optionsHandlers, nameof(optionsHandlers));
+            ArgumentNullException.ThrowIfNull(logger, nameof(logger));
 
             this.optionsHandlers = optionsHandlers.ToDictionary(h => h.ModelType);
             this.logger = logger;
@@ -29,7 +28,7 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers.Options
 
         public IOptionHandler CreateOptionHandler(Option model)
         {
-            Require.NotNull(model, nameof(model));
+            ArgumentNullException.ThrowIfNull(model, nameof(model));
             var type = model.GetType();
 
             logger.LogDebug("Getting option handler for option {Option}.", type);

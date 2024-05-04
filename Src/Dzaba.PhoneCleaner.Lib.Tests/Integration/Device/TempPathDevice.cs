@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Dzaba.PhoneCleaner.Lib.Device;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Dzaba.PhoneCleaner.Lib.Device;
-using Dzaba.PhoneCleaner.Utils;
 
 namespace Dzaba.PhoneCleaner.Lib.Tests.Integration.Device
 {
@@ -12,7 +12,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Integration.Device
 
         public TempPathDevice(string rootPath)
         {
-            Require.NotWhiteSpace(rootPath, nameof(rootPath));
+            ArgumentException.ThrowIfNullOrWhiteSpace(rootPath, nameof(rootPath));
 
             this.rootPath = rootPath;
         }

@@ -1,5 +1,5 @@
-﻿using System;
-using Dzaba.PhoneCleaner.Lib.Device;
+﻿using Dzaba.PhoneCleaner.Lib.Device;
+using System;
 
 namespace Dzaba.PhoneCleaner.Lib.Handlers
 {

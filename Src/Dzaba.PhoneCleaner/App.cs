@@ -1,5 +1,4 @@
 ﻿using Dzaba.PhoneCleaner.Lib;
-using Dzaba.PhoneCleaner.Utils;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
@@ -19,8 +18,8 @@ namespace Dzaba.PhoneCleaner
         public App(ICleaner cleaner,
             ILogger<App> logger)
         {
-            Require.NotNull(cleaner, nameof(cleaner));
-            Require.NotNull(logger, nameof(logger));
+            ArgumentNullException.ThrowIfNull(cleaner, nameof(cleaner));
+            ArgumentNullException.ThrowIfNull(logger, nameof(logger));
 
             this.cleaner = cleaner;
             this.logger = logger;
@@ -28,7 +27,7 @@ namespace Dzaba.PhoneCleaner
 
         public int Run(CleanData data)
         {
-            Require.NotNull(data, nameof(data));
+            ArgumentNullException.ThrowIfNull(data, nameof(data));
 
             try
             {

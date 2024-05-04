@@ -2,7 +2,6 @@
 using Dzaba.PhoneCleaner.Lib.Config.Options;
 using Dzaba.PhoneCleaner.Lib.Device;
 using Dzaba.PhoneCleaner.Lib.Handlers.Options;
-using Dzaba.PhoneCleaner.Utils;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -31,8 +30,8 @@ namespace Dzaba.PhoneCleaner.Lib
         public IOHelper(ILogger<IOHelper> logger,
             IOptionsEvaluator optionsEvaluator)
         {
-            Require.NotNull(logger, nameof(logger));
-            Require.NotNull(optionsEvaluator, nameof(optionsEvaluator));
+            ArgumentNullException.ThrowIfNull(logger, nameof(logger));
+            ArgumentNullException.ThrowIfNull(optionsEvaluator, nameof(optionsEvaluator));
 
             this.logger = logger;
             this.optionsEvaluator = optionsEvaluator;
@@ -40,9 +39,9 @@ namespace Dzaba.PhoneCleaner.Lib
 
         public bool TryCopyFile(IDeviceFileInfo file, string targetFilePath, IDeviceConnection deviceConnection, OnFileConflict onFileConflict)
         {
-            Require.NotNull(file, nameof(file));
-            Require.NotWhiteSpace(targetFilePath, nameof(targetFilePath));
-            Require.NotNull(deviceConnection, nameof(deviceConnection));
+            ArgumentNullException.ThrowIfNull(file, nameof(file));
+            ArgumentException.ThrowIfNullOrWhiteSpace(targetFilePath, nameof(targetFilePath));
+            ArgumentNullException.ThrowIfNull(deviceConnection, nameof(deviceConnection));
 
             var currentTargetFilePath = targetFilePath;
             var overwrite = false;
@@ -139,8 +138,8 @@ namespace Dzaba.PhoneCleaner.Lib
         public IReadOnlyList<IDeviceFileInfo> EnumerateFiles(IDeviceConnection deviceConnection, IDeviceDirectoryInfo dir,
             IEnumerable<Option> options)
         {
-            Require.NotNull(deviceConnection, nameof(deviceConnection));
-            Require.NotNull(dir, nameof(dir));
+            ArgumentNullException.ThrowIfNull(deviceConnection, nameof(deviceConnection));
+            ArgumentNullException.ThrowIfNull(dir, nameof(dir));
 
             return deviceConnection.EnumerateFiles(dir.FullName, SearchOption.TopDirectoryOnly)
                 .Where(f => optionsEvaluator.IsOk(options, deviceConnection, f))
@@ -150,8 +149,8 @@ namespace Dzaba.PhoneCleaner.Lib
         public IReadOnlyList<IDeviceDirectoryInfo> EnumerateDirectories(IDeviceConnection deviceConnection, IDeviceDirectoryInfo dir,
             IEnumerable<Option> options)
         {
-            Require.NotNull(deviceConnection, nameof(deviceConnection));
-            Require.NotNull(dir, nameof(dir));
+            ArgumentNullException.ThrowIfNull(deviceConnection, nameof(deviceConnection));
+            ArgumentNullException.ThrowIfNull(dir, nameof(dir));
 
             return deviceConnection.EnumerateDirectories(dir.FullName, SearchOption.TopDirectoryOnly)
                     .Where(d => optionsEvaluator.IsOk(options, deviceConnection, d))

@@ -1,5 +1,4 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Device;
-using Dzaba.PhoneCleaner.Utils;
 using System;
 
 namespace Dzaba.PhoneCleaner.Lib.Tests.Integration.Device
@@ -10,7 +9,7 @@ namespace Dzaba.PhoneCleaner.Lib.Tests.Integration.Device
 
         public DeviceConnectionFactory(Func<string> rootDirProvider)
         {
-            Require.NotNull(rootDirProvider, nameof(rootDirProvider));
+            ArgumentNullException.ThrowIfNull(rootDirProvider, nameof(rootDirProvider));
 
             this.rootDirProvider = rootDirProvider;
         }

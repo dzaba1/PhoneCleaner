@@ -1,7 +1,7 @@
 ﻿using Dzaba.PhoneCleaner.Lib.Config;
 using Dzaba.PhoneCleaner.Lib.Device;
-using Dzaba.PhoneCleaner.Utils;
 using Microsoft.Extensions.Logging;
+using System;
 using System.IO;
 
 namespace Dzaba.PhoneCleaner.Lib.Handlers
@@ -14,8 +14,8 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
         public MoveHandler(ILogger<CopyHandler> logger,
             IIOHelper ioHelper)
         {
-            Require.NotNull(logger, nameof(logger));
-            Require.NotNull(ioHelper, nameof(ioHelper));
+            ArgumentNullException.ThrowIfNull(logger, nameof(logger));
+            ArgumentNullException.ThrowIfNull(ioHelper, nameof(ioHelper));
 
             this.logger = logger;
             this.ioHelper = ioHelper;
@@ -23,9 +23,9 @@ namespace Dzaba.PhoneCleaner.Lib.Handlers
 
         protected override int Handle(Move model, IDeviceConnection deviceConnection, CleanData cleanData)
         {
-            Require.NotNull(model, nameof(model));
-            Require.NotNull(deviceConnection, nameof(deviceConnection));
-            Require.NotNull(cleanData, nameof(cleanData));
+            ArgumentNullException.ThrowIfNull(model, nameof(model));
+            ArgumentNullException.ThrowIfNull(deviceConnection, nameof(deviceConnection));
+            ArgumentNullException.ThrowIfNull(cleanData, nameof(cleanData));
 
             var root = deviceConnection.GetRootOrThrow(model.DriveIndex);
             var path = Path.Combine(root, model.Path);
