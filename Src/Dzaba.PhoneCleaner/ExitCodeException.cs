@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace Dzaba.PhoneCleaner
 {
@@ -24,11 +23,5 @@ namespace Dzaba.PhoneCleaner
         {
             ExitCode = exitCode;
         }
-
-        protected ExitCodeException(SerializationInfo info, StreamingContext context)
-			: base(info, context)
-		{
-
-		}
 	}
 }
